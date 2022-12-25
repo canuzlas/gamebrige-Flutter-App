@@ -40,7 +40,7 @@ class _StartPageState extends State<StartPage> {
     }
 
     getToken();
-    setTimeout(() => {Navigator.pushNamed(context, '/Tab')}, 2000);
+    setTimeout(() => {Navigator.pushNamed(context, '/Landing')}, 2000);
   }
 
   @override
