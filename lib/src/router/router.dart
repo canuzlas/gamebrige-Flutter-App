@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepOnePage.dart';
 import 'package:gamebrige/src/screens/appBottomBarPage.dart';
 import 'package:gamebrige/src/screens/appLandingPage.dart';
 import 'package:gamebrige/src/screens/appLoginPage.dart';
@@ -17,6 +18,9 @@ class GeneratedRouter {
         return MaterialPageRoute(builder: (context) => const LandingPage());
       case '/Login':
         return MaterialPageRoute(builder: (context) => const LoginPage());
+      case 'RegisterStep1':
+        return MaterialPageRoute(
+            builder: (context) => const RegisterStepOnePage());
     }
     return null;
   }

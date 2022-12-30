@@ -18,7 +18,7 @@ class LandingPage extends StatelessWidget {
         const Center(
           child: Text("GAMEBRIGE",
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.white60,
                 fontSize: 45,
                 fontWeight: FontWeight.w900,
               )),
@@ -30,7 +30,7 @@ class LandingPage extends StatelessWidget {
             child: const Center(
               child: Text(
                   '"Oyunlarla ilgili anlatmak istedğin bir şeyler mi var?"',
-                  style: TextStyle(color: Colors.white, fontSize: 15)),
+                  style: TextStyle(color: Colors.white60, fontSize: 15)),
             ),
           ),
         ),
@@ -42,14 +42,15 @@ class LandingPage extends StatelessWidget {
               Navigator.pushNamed(context, "/Login");
             },
             child: Text(
-              "Hadi Başlayalım. !",
-              style: TextStyle(fontSize: 20, color: Colors.black),
+              "Hadi Başlayalım",
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.lightBlueAccent),
-              padding: MaterialStatePropertyAll(EdgeInsets.all(10.0)),
-              elevation: MaterialStatePropertyAll(10.0),
-            ),
+                backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
+                elevation: MaterialStatePropertyAll(10.0),
+                side: MaterialStatePropertyAll(
+                    BorderSide(width: 1.0, color: Colors.white))),
           ),
         )
       ],
