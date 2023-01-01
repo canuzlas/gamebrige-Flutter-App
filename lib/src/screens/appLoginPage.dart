@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, "RegisterStep1");
+                    Navigator.pushNamed(context, "/RegisterStep1");
                   },
                   child: const Text(
                     "Kayıt Ol",

@@ -3,11 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-late final deneme;
+//statment manage exmp
+//late final deneme;
 
 class StartPage extends StatefulWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -28,21 +28,30 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+
     void getToken() async {
-      var url = "${dotenv.env['API_URL']!}api";
+      var url = "${dotenv.env['API_URL']!}api/${dotenv.env['APP_ID']!}";
       // async store referans oluşturuyoruz
       prefs = await SharedPreferences.getInstance();
       //apiden token alıyoruz
       var response = await http.get(Uri.parse(url));
+      print(response.body);
       token = jsonDecode(response.body);
-      //gelen json datası decode edilip storeye kaydediliuor.
-      prefs.setString("token", token["token"].toString());
-      print(token["token"]);
-      deneme = Provider((ref) => token["token"].toString());
+      //token geldi mi?
+      if (token["token"] != null) {
+        //gelen json datası decode edilip storeye kaydediliuor.
+        prefs.setString("token", token["token"].toString());
+        setTimeout(() => {Navigator.pushNamed(context, '/Landing')}, 2000);
+      } else {
+        //token gelmediyse hatayı bildir
+        setTimeout(() => {Navigator.pushNamed(context, '/404')}, 2000);
+      }
+      //print(token["token"]);
+      //statment manage exmp
+      //deneme = Provider((ref) => token["token"].toString());
     }
 
     getToken();
-    setTimeout(() => {Navigator.pushNamed(context, '/Landing')}, 2000);
   }
 
   @override
