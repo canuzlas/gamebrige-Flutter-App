@@ -65,11 +65,11 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
 
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
+    print(prefs.getInt("otpcode"));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initAsyncStorage();
   }
@@ -89,43 +89,45 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
           ),
           //top size font
           Container(
-            alignment: Alignment.topCenter,
-            margin: EdgeInsets.only(top: 100),
-            child: const Text(
-              "GAMEBRİGE ailesine katılmaya hazırsın.",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.white60),
+            margin: EdgeInsets.only(bottom: 200),
+            child: const Center(
+              child: Text(
+                "GAMEBRİGE ailesine katılmaya hazırsın.",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Colors.white60),
+              ),
             ),
           ),
           //eposta input
           Container(
-            alignment: Alignment.topCenter,
-            margin: EdgeInsets.only(top: 150),
+            margin: EdgeInsets.only(top: 10),
             //margin: const EdgeInsets.only(top: 120),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Form(
-                autovalidateMode: AutovalidateMode.always,
-                child: TextFormField(
-                  validator: validateEmail,
-                  decoration: const InputDecoration(
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Form(
+                  autovalidateMode: AutovalidateMode.always,
+                  child: TextFormField(
+                    validator: validateEmail,
+                    decoration: const InputDecoration(
+                      labelStyle: TextStyle(color: Colors.white),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      labelText: 'E-posta adresin',
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    labelText: 'E-posta adresin',
+                    style: TextStyle(color: Colors.white),
+                    onChanged: (txt) {
+                      setState(() {
+                        email = txt;
+                      });
+                    },
                   ),
-                  style: TextStyle(color: Colors.white),
-                  onChanged: (txt) {
-                    setState(() {
-                      email = txt;
-                    });
-                  },
                 ),
               ),
             ),
@@ -149,16 +151,16 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
                             fontSize: 16.0)
                         : null;
               },
-              child: Text(
-                "Devam Et",
-                style: TextStyle(color: Colors.white),
-              ),
               style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                   padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
                   elevation: MaterialStatePropertyAll(10.0),
                   side: MaterialStatePropertyAll(
                       BorderSide(width: 1.0, color: Colors.white))),
+              child: const Text(
+                "Devam Et",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ],

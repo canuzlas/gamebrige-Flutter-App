@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepOnePage.dart';
+import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepTwoPage.dart';
 import 'package:gamebrige/src/screens/appBottomBarPage.dart';
 import 'package:gamebrige/src/screens/appLandingPage.dart';
 import 'package:gamebrige/src/screens/appLoginPage.dart';
@@ -12,7 +13,7 @@ class GeneratedRouter {
       case '/':
         //return MaterialPageRoute(builder: (context) => const StartPage());
         return MaterialPageRoute(
-            builder: (context) => const RegisterStepOnePage());
+            builder: (context) => const RegisterStepTwoPage());
       case '/Tab':
         return MaterialPageRoute(builder: (context) => const BottomBar());
       case '/Landing':
@@ -22,6 +23,9 @@ class GeneratedRouter {
       case '/RegisterStep1':
         return MaterialPageRoute(
             builder: (context) => const RegisterStepOnePage());
+      case '/RegisterStep2':
+        return MaterialPageRoute(
+            builder: (context) => const RegisterStepTwoPage());
       case '/404':
         return MaterialPageRoute(
             builder: (context) => const DortyuzdortPagexd());
