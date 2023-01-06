@@ -14,6 +14,7 @@ class _RegisterStepTwoPageState extends State<RegisterStepTwoPage> {
   late SharedPreferences prefs;
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
+    print(prefs.getInt("otpcode"));
   }
 
   @override
@@ -24,7 +25,7 @@ class _RegisterStepTwoPageState extends State<RegisterStepTwoPage> {
 
   void checkOtp(String v) {
     if (v == prefs.getInt("otpcode").toString()) {
-      print("true");
+      Navigator.pushNamed(context, "/RegisterStep3");
     } else {
       Fluttertoast.showToast(
           msg: "Kod Hatalı.",

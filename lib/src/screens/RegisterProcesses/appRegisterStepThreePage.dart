@@ -1,72 +1,37 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../smtp/smtp.dart';
-
-class RegisterStepOnePage extends StatefulWidget {
-  const RegisterStepOnePage({Key? key}) : super(key: key);
+class RegisterStepThreePage extends StatefulWidget {
+  const RegisterStepThreePage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterStepOnePage> createState() => _RegisterStepOnePageState();
+  State<RegisterStepThreePage> createState() => _RegisterStepThreePageState();
 }
 
-class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
-  //generated otp code
-  int code = Random().nextInt(999999);
+class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
   late SharedPreferences prefs;
+  late String username;
+  late bool possibleCont;
 
-  String email = "";
-  bool possibleCont = false;
-  //email regex
-  String? validateEmail(String? value) {
-    const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
-        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
-        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
-        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
-        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
-        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
-        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+  String? validateUsername(String? value) {
+    String pattern = r'^[A-Za-z][A-Za-z0-9_]{6,18}$';
     final regex = RegExp(pattern);
     if (value!.isNotEmpty && !regex.hasMatch(value)) {
-      return 'Geçerli bir mail adresi gir';
+      return 'Kullanıcı adınız minimum 6 maximum 18 karakter olabilir\nYalnızca "_" özel işaret kullanılabilir\nYalnızca küçük büyük harf ve rakam kullanabilirsin\nKullanıcı adınız harf ile başlamalı';
     } else {
       value!.isEmpty ? possibleCont = false : possibleCont = true;
       return null;
     }
   }
 
-  void sendOtpCode() async {
-    Fluttertoast.showToast(
-        msg: "Mail gönderiliyor..",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.transparent,
-        textColor: Colors.white,
-        fontSize: 16.0);
-    bool res = await SMTP(code, email);
-    if (res == true) {
-      prefs.setInt("otpcode", code);
-      prefs.setString("willregmail", email);
-      Navigator.pushNamed(context, "/RegisterStep2");
-    } else {
-      Fluttertoast.showToast(
-          msg: "Hata oldu, sonra tekrar dene.",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.transparent,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
+  goToStepFour() async {
+    await prefs.setString("willregusername", username);
+    Navigator.pushNamed(context, "/RegisterStep4");
   }
 
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
-    //print(prefs.getInt("otpcode"));
   }
 
   @override
@@ -80,7 +45,7 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
     return Scaffold(
       body: Stack(
         children: [
-          //bg photo
+          //bg image
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -88,28 +53,12 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
                   fit: BoxFit.cover),
             ),
           ),
-          //back button
-          SafeArea(
-            child: Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(left: 10),
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, "/Login");
-                },
-              ),
-            ),
-          ),
-          //top size font
+          //top text
           Container(
             margin: EdgeInsets.only(bottom: 200),
             child: const Center(
               child: Text(
-                "GAMEBRİGE ailesine katılmaya hazırsın.",
+                "Kullanıcı adın ne olsun?",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 17,
@@ -117,7 +66,7 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
               ),
             ),
           ),
-          //eposta input
+          //input for username
           Container(
             margin: EdgeInsets.only(top: 10),
             //margin: const EdgeInsets.only(top: 120),
@@ -127,7 +76,7 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
                 child: Form(
                   autovalidateMode: AutovalidateMode.always,
                   child: TextFormField(
-                    validator: validateEmail,
+                    validator: validateUsername,
                     decoration: const InputDecoration(
                       labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
@@ -136,12 +85,12 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
-                      labelText: 'E-posta adresin',
+                      labelText: 'Kullanıcı adı',
                     ),
                     style: TextStyle(color: Colors.white),
                     onChanged: (txt) {
                       setState(() {
-                        email = txt;
+                        username = txt;
                       });
                     },
                   ),
@@ -149,15 +98,15 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
               ),
             ),
           ),
-          //devam buton
+          // continue button
           Container(
             alignment: Alignment.bottomCenter,
             margin: EdgeInsets.only(bottom: 50),
             child: OutlinedButton(
               onPressed: () {
                 possibleCont == true
-                    ? sendOtpCode()
-                    : email.length == 0
+                    ? goToStepFour()
+                    : username.length == 0
                         ? Fluttertoast.showToast(
                             msg: "Boş bırakılamaz.",
                             toastLength: Toast.LENGTH_LONG,

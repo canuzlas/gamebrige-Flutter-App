@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
@@ -17,8 +18,8 @@ Future<bool> SMTP(code, mail) async {
   final smtpServer = SmtpServer(
     "mail.falhub.com",
     port: 587,
-    username: "mailer@falhub.com",
-    password: "eDuJx7XLX7WamFA",
+    username: dotenv.env["SMTP_MAIL"],
+    password: dotenv.env["SMTP_PASS"],
   );
 
   // Create our message.
@@ -31,9 +32,11 @@ Future<bool> SMTP(code, mail) async {
         "<h1>GAMEBRİGE'E HOŞGELDİN</h1>\n<h3>E-posta onay kodnuz: ${code} </h3>";
 
   try {
-    await send(message, smtpServer);
+    var deneme = await send(message, smtpServer);
+    //print(deneme);
     return true;
   } on MailerException catch (e) {
+    //print("hata");
     return false;
   }
   // DONE
