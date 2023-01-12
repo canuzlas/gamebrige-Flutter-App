@@ -6,6 +6,7 @@ class DortyuzdortPagexd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white12,
       body: Stack(
         children: [
           Center(
@@ -20,7 +21,10 @@ class DortyuzdortPagexd extends StatelessWidget {
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Text(
               "İnternetini kontrol et, eğer internetinde sorun yoksa lütfen uygulamayı tekrar başlat.",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  color: Colors.white60),
             ),
           ),
         ],

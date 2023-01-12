@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../smtp/smtp.dart';
@@ -35,6 +38,43 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
     } else {
       value!.isEmpty ? possibleCont = false : possibleCont = true;
       return null;
+    }
+  }
+
+  //email var mı diye kontrol
+  checkTheEmail(context) async {
+    var url = "${dotenv.env['API_URL']!}api/checkemail";
+    var response = await http.post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'appId': dotenv.env['APP_ID'], 'email': email}));
+    var decodedResponse = jsonDecode(response.body);
+    if (decodedResponse['appId'] != null) {
+      Navigator.pushNamed(context, '/404');
+    } else {
+      if (decodedResponse['error'] != null) {
+        Fluttertoast.showToast(
+            msg: "Sistemsel Hata.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+      if (decodedResponse['email'] == false) {
+        sendOtpCode();
+      } else {
+        Fluttertoast.showToast(
+            msg: "Başka bir mail adresi dene.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     }
   }
 
@@ -156,7 +196,7 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
             child: OutlinedButton(
               onPressed: () {
                 possibleCont == true
-                    ? sendOtpCode()
+                    ? checkTheEmail(context)
                     : email.length == 0
                         ? Fluttertoast.showToast(
                             msg: "Boş bırakılamaz.",

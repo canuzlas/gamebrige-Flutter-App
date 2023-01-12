@@ -16,8 +16,8 @@ Future<bool> SMTP(code, mail) async {
   // See the named arguments of SmtpServer for further configuration
   // options.
   final smtpServer = SmtpServer(
-    "mail.falhub.com",
-    port: 587,
+    dotenv.env["SMTP_SERVER"]!,
+    port: int.parse(dotenv.env["SMTP_PORT"]!),
     username: dotenv.env["SMTP_MAIL"],
     password: dotenv.env["SMTP_PASS"],
   );
@@ -33,10 +33,10 @@ Future<bool> SMTP(code, mail) async {
 
   try {
     var deneme = await send(message, smtpServer);
-    //print(deneme);
+    print(deneme);
     return true;
   } on MailerException catch (e) {
-    //print("hata");
+    print(e);
     return false;
   }
   // DONE
