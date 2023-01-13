@@ -8,14 +8,15 @@ import 'package:gamebrige/src/screens/appLoginPage.dart';
 import '../screens/404/dortyuzdort.dart';
 import '../screens/RegisterProcesses/appRegisterStepFourPage.dart';
 import '../screens/RegisterProcesses/appRegisterStepThreePage.dart';
+import '../screens/appStartPage.dart';
 
 class GeneratedRouter {
   static Route? router(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        //return MaterialPageRoute(builder: (context) => const StartPage());
+        return MaterialPageRoute(builder: (context) => const StartPage());
         return MaterialPageRoute(
-            builder: (context) => const RegisterStepOnePage());
+            builder: (context) => const RegisterStepFourPage());
       case '/Tab':
         return MaterialPageRoute(builder: (context) => const BottomBar());
       case '/Landing':

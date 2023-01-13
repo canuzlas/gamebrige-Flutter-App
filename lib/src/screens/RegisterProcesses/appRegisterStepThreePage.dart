@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterStepThreePage extends StatefulWidget {
@@ -22,6 +26,43 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
     } else {
       value!.isEmpty ? possibleCont = false : possibleCont = true;
       return null;
+    }
+  }
+
+  checkTheUserName(context) async {
+    var url = "${dotenv.env['API_URL']!}api/checkusername";
+    var response = await http.post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body:
+            jsonEncode({'appId': dotenv.env['APP_ID'], 'username': username}));
+    var decodedResponse = jsonDecode(response.body);
+    if (decodedResponse['appId'] != null) {
+      Navigator.pushNamed(context, '/404');
+    } else {
+      if (decodedResponse['error'] != null) {
+        Fluttertoast.showToast(
+            msg: "Sistemsel Hata.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+      if (decodedResponse['username'] == false) {
+        goToStepFour();
+      } else {
+        Fluttertoast.showToast(
+            msg: "Başka bir kulllanıcı adı dene.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     }
   }
 
@@ -105,7 +146,7 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
             child: OutlinedButton(
               onPressed: () {
                 possibleCont == true
-                    ? goToStepFour()
+                    ? checkTheUserName(context)
                     : username.length == 0
                         ? Fluttertoast.showToast(
                             msg: "Boş bırakılamaz.",

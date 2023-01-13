@@ -51,7 +51,13 @@ class _StartPageState extends State<StartPage> {
       //deneme = Provider((ref) => token["token"].toString());
     }
 
-    getToken();
+    try {
+      getToken();
+    } on Exception catch (exception) {
+      setTimeout(() => {Navigator.pushNamed(context, '/404')}, 2000);
+    } catch (error) {
+      setTimeout(() => {Navigator.pushNamed(context, '/404')}, 2000);
+    }
   }
 
   @override
