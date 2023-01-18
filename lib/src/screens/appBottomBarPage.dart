@@ -35,23 +35,23 @@ class _BottomBarState extends State<BottomBar> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Anasayfa",
-              backgroundColor: Colors.white),
+              backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.comment),
-              label: "Bloglar",
-              backgroundColor: Colors.white),
+              label: "Bloglarım",
+              backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.search_rounded),
               label: "Ara",
-              backgroundColor: Colors.white),
+              backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: "Profil",
-              backgroundColor: Colors.white),
+              backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
         ],
         type: BottomNavigationBarType.shifting,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black26,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white60,
         currentIndex: selectedIndex,
         onTap: (index) {
           setState(() {

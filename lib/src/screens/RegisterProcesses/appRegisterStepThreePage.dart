@@ -15,8 +15,12 @@ class RegisterStepThreePage extends StatefulWidget {
 
 class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
   late SharedPreferences prefs;
-  late String username;
+  late String username = "";
   late bool possibleCont;
+
+  Future<bool> _onWillPop() async {
+    return false;
+  }
 
   String? validateUsername(String? value) {
     String pattern = r'^[A-Za-z][A-Za-z0-9_]{6,18}$';
@@ -30,6 +34,16 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
   }
 
   checkTheUserName(context) async {
+    username.isEmpty
+        ? Fluttertoast.showToast(
+            msg: "Boş Bırakılamaz.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0)
+        : null;
     var url = "${dotenv.env['API_URL']!}api/checkusername";
     var response = await http.post(Uri.parse(url),
         headers: {
@@ -50,18 +64,19 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
             backgroundColor: Colors.transparent,
             textColor: Colors.white,
             fontSize: 16.0);
-      }
-      if (decodedResponse['username'] == false) {
-        goToStepFour();
       } else {
-        Fluttertoast.showToast(
-            msg: "Başka bir kulllanıcı adı dene.!",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.TOP,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.transparent,
-            textColor: Colors.white,
-            fontSize: 16.0);
+        if (decodedResponse['username'] == false) {
+          goToStepFour();
+        } else {
+          Fluttertoast.showToast(
+              msg: "Başka bir kulllanıcı adı dene.!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       }
     }
   }
@@ -83,94 +98,98 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          //bg image
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/register.jpeg"),
-                  fit: BoxFit.cover),
-            ),
-          ),
-          //top text
-          Container(
-            margin: EdgeInsets.only(bottom: 200),
-            child: const Center(
-              child: Text(
-                "Kullanıcı adın ne olsun?",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                    color: Colors.white60),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            //bg image
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/register.jpeg"),
+                    fit: BoxFit.cover),
               ),
             ),
-          ),
-          //input for username
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            //margin: const EdgeInsets.only(top: 120),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  child: TextFormField(
-                    validator: validateUsername,
-                    decoration: const InputDecoration(
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+            //top text
+            Container(
+              margin: EdgeInsets.only(bottom: 200),
+              child: const Center(
+                child: Text(
+                  "Kullanıcı adın ne olsun?",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.white60),
+                ),
+              ),
+            ),
+            //input for username
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              //margin: const EdgeInsets.only(top: 120),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Form(
+                    autovalidateMode: AutovalidateMode.always,
+                    child: TextFormField(
+                      validator: validateUsername,
+                      decoration: const InputDecoration(
+                        labelStyle: TextStyle(color: Colors.white),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        labelText: 'Kullanıcı adı',
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      labelText: 'Kullanıcı adı',
+                      style: TextStyle(color: Colors.white),
+                      onChanged: (txt) {
+                        setState(() {
+                          username = txt;
+                        });
+                      },
                     ),
-                    style: TextStyle(color: Colors.white),
-                    onChanged: (txt) {
-                      setState(() {
-                        username = txt;
-                      });
-                    },
                   ),
                 ),
               ),
             ),
-          ),
-          // continue button
-          Container(
-            alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(bottom: 50),
-            child: OutlinedButton(
-              onPressed: () {
-                possibleCont == true
-                    ? checkTheUserName(context)
-                    : username.length == 0
-                        ? Fluttertoast.showToast(
-                            msg: "Boş bırakılamaz.",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.TOP,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.transparent,
-                            textColor: Colors.white,
-                            fontSize: 16.0)
-                        : null;
-              },
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
-                  elevation: MaterialStatePropertyAll(10.0),
-                  side: MaterialStatePropertyAll(
-                      BorderSide(width: 1.0, color: Colors.white))),
-              child: const Text(
-                "Devam Et",
-                style: TextStyle(color: Colors.white),
+            // continue button
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(bottom: 50),
+              child: OutlinedButton(
+                onPressed: () {
+                  possibleCont == true
+                      ? checkTheUserName(context)
+                      : username.length == 0
+                          ? Fluttertoast.showToast(
+                              msg: "Boş bırakılamaz.",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.TOP,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.transparent,
+                              textColor: Colors.white,
+                              fontSize: 16.0)
+                          : null;
+                },
+                style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.transparent),
+                    padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
+                    elevation: MaterialStatePropertyAll(10.0),
+                    side: MaterialStatePropertyAll(
+                        BorderSide(width: 1.0, color: Colors.white))),
+                child: const Text(
+                  "Devam Et",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

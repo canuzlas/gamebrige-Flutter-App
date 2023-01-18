@@ -12,6 +12,10 @@ class RegisterStepTwoPage extends StatefulWidget {
 
 class _RegisterStepTwoPageState extends State<RegisterStepTwoPage> {
   late SharedPreferences prefs;
+  Future<bool> _onWillPop() async {
+    return false;
+  }
+
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
     print(prefs.getInt("otpcode"));
@@ -40,63 +44,66 @@ class _RegisterStepTwoPageState extends State<RegisterStepTwoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/register.jpeg"),
-                fit: BoxFit.cover),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(bottom: 250),
-          child: const Center(
-            child: Text(
-              "E-posta adresine gelen kodu gir.",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.white60),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+          body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/register.jpeg"),
+                  fit: BoxFit.cover),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 13, right: 13),
-          child: Center(
-            child: PinCodeTextField(
-              length: 6,
-              obscureText: false,
-              animationType: AnimationType.scale,
-              keyboardType: TextInputType.number,
-              pinTheme: PinTheme(
-                activeColor: Colors.greenAccent,
-                inactiveColor: Colors.pinkAccent,
-                disabledColor: Colors.transparent,
-                selectedFillColor: Colors.transparent,
-                inactiveFillColor: Colors.white10,
-                activeFillColor: Colors.transparent,
-
-                shape: PinCodeFieldShape.underline,
-                //borderRadius: BorderRadius.circular(5),
-                fieldHeight: 60,
-                fieldWidth: 40,
+          Container(
+            margin: EdgeInsets.only(bottom: 250),
+            child: const Center(
+              child: Text(
+                "E-posta adresine gelen kodu gir.",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Colors.white60),
               ),
-              textStyle: TextStyle(color: Colors.white),
-              animationDuration: Duration(milliseconds: 300),
-              backgroundColor: Colors.transparent,
-              enableActiveFill: true,
-              //errorAnimationController: errorController,
-              //controller: textEditingController,
-              onCompleted: (v) {
-                checkOtp(v);
-              },
-              appContext: context, onChanged: (String value) {},
             ),
           ),
-        ),
-      ],
-    ));
+          Padding(
+            padding: const EdgeInsets.only(left: 13, right: 13),
+            child: Center(
+              child: PinCodeTextField(
+                length: 6,
+                obscureText: false,
+                animationType: AnimationType.scale,
+                keyboardType: TextInputType.number,
+                pinTheme: PinTheme(
+                  activeColor: Colors.greenAccent,
+                  inactiveColor: Colors.pinkAccent,
+                  disabledColor: Colors.transparent,
+                  selectedFillColor: Colors.transparent,
+                  inactiveFillColor: Colors.white10,
+                  activeFillColor: Colors.transparent,
+
+                  shape: PinCodeFieldShape.underline,
+                  //borderRadius: BorderRadius.circular(5),
+                  fieldHeight: 60,
+                  fieldWidth: 40,
+                ),
+                textStyle: TextStyle(color: Colors.white),
+                animationDuration: Duration(milliseconds: 300),
+                backgroundColor: Colors.transparent,
+                enableActiveFill: true,
+                //errorAnimationController: errorController,
+                //controller: textEditingController,
+                onCompleted: (v) {
+                  checkOtp(v);
+                },
+                appContext: context, onChanged: (String value) {},
+              ),
+            ),
+          ),
+        ],
+      )),
+    );
   }
 }

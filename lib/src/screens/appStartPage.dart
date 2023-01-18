@@ -3,11 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 //statment manage exmp
-//late final deneme;
+late final stoken;
+late var suser;
 
 class StartPage extends StatefulWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -39,16 +41,20 @@ class _StartPageState extends State<StartPage> {
       token = jsonDecode(response.body);
       //token geldi mi?
       if (token["token"] != null) {
+        stoken = Provider((ref) => token["token"].toString());
         //gelen json datası decode edilip storeye kaydediliuor.
         prefs.setString("token", token["token"].toString());
-        setTimeout(() => {Navigator.pushNamed(context, '/Landing')}, 2000);
+        //user kontrol ediliyor
+        if (prefs.getString("user") != null) {
+          suser = Provider((ref) => prefs.getString("user"));
+          setTimeout(() => {Navigator.pushNamed(context, '/Tab')}, 2000);
+        } else {
+          setTimeout(() => {Navigator.pushNamed(context, '/Landing')}, 2000);
+        }
       } else {
         //token gelmediyse hatayı bildir
         setTimeout(() => {Navigator.pushNamed(context, '/404')}, 2000);
       }
-      //print(token["token"]);
-      //statment manage exmp
-      //deneme = Provider((ref) => token["token"].toString());
     }
 
     try {

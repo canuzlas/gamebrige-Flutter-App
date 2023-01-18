@@ -16,7 +16,7 @@ class GeneratedRouter {
       case '/':
         return MaterialPageRoute(builder: (context) => const StartPage());
         return MaterialPageRoute(
-            builder: (context) => const RegisterStepFourPage());
+            builder: (context) => const RegisterStepOnePage());
       case '/Tab':
         return MaterialPageRoute(builder: (context) => const BottomBar());
       case '/Landing':

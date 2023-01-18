@@ -62,18 +62,19 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
             backgroundColor: Colors.transparent,
             textColor: Colors.white,
             fontSize: 16.0);
-      }
-      if (decodedResponse['email'] == false) {
-        sendOtpCode();
       } else {
-        Fluttertoast.showToast(
-            msg: "Başka bir mail adresi dene.!",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.TOP,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.transparent,
-            textColor: Colors.white,
-            fontSize: 16.0);
+        if (decodedResponse['email'] == false) {
+          sendOtpCode();
+        } else {
+          Fluttertoast.showToast(
+              msg: "Başka bir mail adresi dene.!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       }
     }
   }
@@ -132,9 +133,9 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
           SafeArea(
             child: Container(
               alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10),
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
                 ),
@@ -146,7 +147,7 @@ class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
           ),
           //top size font
           Container(
-            margin: EdgeInsets.only(bottom: 200),
+            margin: const EdgeInsets.only(bottom: 200),
             child: const Center(
               child: Text(
                 "GAMEBRİGE ailesine katılmaya hazırsın.",

@@ -21,6 +21,10 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
 
   late SharedPreferences prefs;
 
+  Future<bool> _onWillPop() async {
+    return false;
+  }
+
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
     print(prefs.getKeys());
@@ -79,26 +83,32 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
               backgroundColor: Colors.transparent,
               textColor: Colors.white,
               fontSize: 16.0);
-        }
-        if (decodedResponse['register'] == false) {
-          Fluttertoast.showToast(
-              msg: "Sistemsel Hata.!",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.TOP,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.transparent,
-              textColor: Colors.white,
-              fontSize: 16.0);
         } else {
-          Fluttertoast.showToast(
-              msg: "Kayıt Olma Başarılı!",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.transparent,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          Navigator.pushNamed(context, '/Tab');
+          if (decodedResponse['register'] == false) {
+            Fluttertoast.showToast(
+                msg: "Sistemsel Hata.!",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.TOP,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.transparent,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          } else {
+            prefs.remove("deneme");
+            prefs.remove("willregmail");
+            prefs.remove("willregusername");
+            prefs.remove("otpcode");
+            prefs.setString("user", jsonEncode(decodedResponse["user"]));
+            Fluttertoast.showToast(
+                msg: "Kayıt Olma Başarılı!",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.transparent,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.pushNamed(context, '/Tab');
+          }
         }
       }
     }
@@ -112,139 +122,143 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          //bg image
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/register.jpeg"),
-                  fit: BoxFit.cover),
-            ),
-          ),
-          //top text
-          Container(
-            margin: EdgeInsets.only(bottom: 200),
-            child: const Center(
-              child: Text(
-                "Güvenli bir şifre oluştur.",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                    color: Colors.white60),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            //bg image
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/register.jpeg"),
+                    fit: BoxFit.cover),
               ),
             ),
-          ),
-          //input for pass
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            //margin: const EdgeInsets.only(top: 120),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  child: TextFormField(
-                    obscureText: passwordVisible,
-                    validator: validatePassword,
-                    decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      labelText: 'Şifre',
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.white60,
+            //top text
+            Container(
+              margin: EdgeInsets.only(bottom: 200),
+              child: const Center(
+                child: Text(
+                  "Güvenli bir şifre oluştur.",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.white60),
+                ),
+              ),
+            ),
+            //input for pass
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              //margin: const EdgeInsets.only(top: 120),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Form(
+                    autovalidateMode: AutovalidateMode.always,
+                    child: TextFormField(
+                      obscureText: passwordVisible,
+                      validator: validatePassword,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(color: Colors.white),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            passwordVisible = !passwordVisible;
-                          });
-                        },
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        labelText: 'Şifre',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.white60,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              passwordVisible = !passwordVisible;
+                            });
+                          },
+                        ),
                       ),
+                      style: TextStyle(color: Colors.white),
+                      onChanged: (txt) {
+                        setState(() {
+                          pass = txt;
+                        });
+                      },
                     ),
-                    style: TextStyle(color: Colors.white),
-                    onChanged: (txt) {
-                      setState(() {
-                        pass = txt;
-                      });
-                    },
                   ),
                 ),
               ),
             ),
-          ),
-          //input for repass
-          Container(
-            margin: EdgeInsets.only(top: 170),
-            //margin: const EdgeInsets.only(top: 120),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  child: TextFormField(
-                    obscureText: passwordVisible,
-                    decoration: const InputDecoration(
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+            //input for repass
+            Container(
+              margin: EdgeInsets.only(top: 170),
+              //margin: const EdgeInsets.only(top: 120),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Form(
+                    child: TextFormField(
+                      obscureText: passwordVisible,
+                      decoration: const InputDecoration(
+                        labelStyle: TextStyle(color: Colors.white),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        labelText: 'Şifre tekrarı',
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      labelText: 'Şifre tekrarı',
+                      style: TextStyle(color: Colors.white),
+                      onChanged: (txt) {
+                        setState(() {
+                          repass = txt;
+                        });
+                      },
                     ),
-                    style: TextStyle(color: Colors.white),
-                    onChanged: (txt) {
-                      setState(() {
-                        repass = txt;
-                      });
-                    },
                   ),
                 ),
               ),
             ),
-          ),
-          // continue button
-          Container(
-            alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(bottom: 50),
-            child: OutlinedButton(
-              onPressed: () {
-                possibleCont == true
-                    ? registerToUser(context)
-                    : pass.length == 0
-                        ? Fluttertoast.showToast(
-                            msg: "Boş bırakılamaz.",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.TOP,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.transparent,
-                            textColor: Colors.white,
-                            fontSize: 16.0)
-                        : null;
-              },
-              style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
-                  elevation: MaterialStatePropertyAll(10.0),
-                  side: MaterialStatePropertyAll(
-                      BorderSide(width: 1.0, color: Colors.white))),
-              child: const Text(
-                "Devam Et",
-                style: TextStyle(color: Colors.white),
+            // continue button
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(bottom: 50),
+              child: OutlinedButton(
+                onPressed: () {
+                  possibleCont == true
+                      ? registerToUser(context)
+                      : pass.length == 0
+                          ? Fluttertoast.showToast(
+                              msg: "Boş bırakılamaz.",
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.TOP,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.transparent,
+                              textColor: Colors.white,
+                              fontSize: 16.0)
+                          : null;
+                },
+                style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.transparent),
+                    padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
+                    elevation: MaterialStatePropertyAll(10.0),
+                    side: MaterialStatePropertyAll(
+                        BorderSide(width: 1.0, color: Colors.white))),
+                child: const Text(
+                  "Devam Et",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
