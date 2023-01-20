@@ -4,6 +4,7 @@ import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepTwoPage.d
 import 'package:gamebrige/src/screens/appBottomBarPage.dart';
 import 'package:gamebrige/src/screens/appLandingPage.dart';
 import 'package:gamebrige/src/screens/appLoginPage.dart';
+import 'package:gamebrige/src/screens/appReadSelectedBlogPage.dart';
 
 import '../screens/404/dortyuzdort.dart';
 import '../screens/RegisterProcesses/appRegisterStepFourPage.dart';
@@ -16,7 +17,8 @@ class GeneratedRouter {
       case '/':
         return MaterialPageRoute(builder: (context) => const StartPage());
         return MaterialPageRoute(
-            builder: (context) => const RegisterStepOnePage());
+            builder: (context) =>
+                ReadSelectedBlogPage(blogId: {"blog_id": 1231413}));
       case '/Tab':
         return MaterialPageRoute(builder: (context) => const BottomBar());
       case '/Landing':
@@ -38,6 +40,10 @@ class GeneratedRouter {
       case '/404':
         return MaterialPageRoute(
             builder: (context) => const DortyuzdortPagexd());
+      case '/ReadSelectedBlog':
+        return MaterialPageRoute(
+            builder: (context) =>
+                ReadSelectedBlogPage(blogId: settings.arguments));
     }
     return null;
   }

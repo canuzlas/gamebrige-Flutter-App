@@ -28,6 +28,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     //print(prefs.getString("user"));
   }
 
+  Future<bool> _onWillPop() async {
+    return false;
+  }
+
   getFollowedsBlogs(token, user) async {
     var url = "${dotenv.env['API_URL']!}api/getfollowedsblogs";
     //apiden blogları alıyoruz
@@ -41,7 +45,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           'user': user,
         }));
     var decodedResponse = jsonDecode(response.body);
-    print(decodedResponse);
     if (decodedResponse['appId'] != null) {
       Navigator.pushNamed(context, '/404');
     } else {
@@ -75,137 +78,149 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
-        body: Column(
-          children: [
-            //header
-            SafeArea(
-              child: Container(
-                padding: EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.white),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+          backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
+          body: Column(
+            children: [
+              //header
+              SafeArea(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "GAMEBRIGE",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.notifications),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.message_outlined),
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    const Text(
-                      "GAMEBRİGE",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.add),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.notifications),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.message_outlined),
-                    ),
-                  ],
-                ),
               ),
-            ),
-            //blogs
-            Flexible(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  getFollowedsBlogs(token, user);
-                },
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(10),
-                  itemCount: blogs.length,
-                  itemBuilder: (context, i) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      padding: const EdgeInsets.all(15),
-                      height: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: const Color.fromRGBO(203, 241, 245, 1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+              //blogs
+              Flexible(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    getFollowedsBlogs(token, user);
+                  },
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(10),
+                    itemCount: blogs.length,
+                    itemBuilder: (context, i) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/ReadSelectedBlog",
+                              arguments: {"blog_id": blogs[i]["_id"]});
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          padding: const EdgeInsets.all(15),
+                          height: 150,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: const Color.fromRGBO(203, 241, 245, 1),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 100),
-                            child: Image.asset(
-                              "assets/images/login-bg.jpeg",
-                              fit: BoxFit.fill,
-                              width: 130,
-                            ),
-                          ),
-                          Flexible(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  alignment: Alignment.topCenter,
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
-                                    top: 0,
-                                  ),
-                                  child: Text(
-                                    "${blogs[i]["blog_title"]}",
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    maxLines: 4,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w900),
-                                  ),
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(maxWidth: 100),
+                                child: Image.asset(
+                                  "assets/images/login-bg.jpeg",
+                                  fit: BoxFit.fill,
+                                  width: 100,
                                 ),
-                                Row(
+                              ),
+                              Flexible(
+                                child: Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      padding: const EdgeInsets.only(
+                                        left: 20,
+                                        top: 0,
+                                      ),
+                                      child: Text(
+                                        "${blogs[i]["blog_title"]}",
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                        maxLines: 4,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                    ),
                                     Row(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 5),
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            backgroundImage: AssetImage(
-                                              "assets/images/pp.jpeg",
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 5),
+                                              child: CircleAvatar(
+                                                radius: 15,
+                                                backgroundImage: AssetImage(
+                                                  "assets/images/pp.jpeg",
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            Text(
+                                              "mcuzlas",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         Text(
-                                          "mcuzlas",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          "${blogs[i]["createdAt"].substring(0, 10)}",
                                         ),
                                       ],
-                                    ),
-                                    Text(
-                                      "${blogs[i]["createdAt"].substring(0, 10)}",
-                                    ),
+                                    )
                                   ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            )
-          ],
-        ));
+              )
+            ],
+          )),
+    );
   }
 }
