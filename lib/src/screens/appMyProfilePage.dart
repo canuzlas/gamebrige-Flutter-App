@@ -5,35 +5,27 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'appStartPage.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ProfilePage extends ConsumerStatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
-  late SharedPreferences prefs;
-  late bool deneme;
-  var blogs = [];
+class _ProfilePageState extends ConsumerState<ProfilePage> {
   late var token;
   late var user;
-
-  getSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-    //print(prefs.getString("user"));
-  }
+  var blogs = [];
 
   Future<bool> _onWillPop() async {
     return false;
   }
 
-  getFollowedsBlogs(token, user) async {
-    var url = "${dotenv.env['API_URL']!}api/getfollowedsblogs";
+  getMyBlogs(token, userid) async {
+    var url = "${dotenv.env['API_URL']!}api/getmyblogs";
     //apiden blogları alıyoruz
     var response = await http.post(Uri.parse(url),
         headers: {
@@ -42,7 +34,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
-          'user': user,
+          '_id': userid,
         }));
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
@@ -70,10 +62,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     token = ref.read(stoken);
-    user = ref.read(suser);
-    //print(user);
-    getSharedPreferences();
-    getFollowedsBlogs(token, user);
+    var getuser = ref.read(suser);
+    user = jsonDecode(getuser);
+    getMyBlogs(token, user["_id"]);
   }
 
   @override
@@ -107,23 +98,106 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.notifications),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.message_outlined),
+                        icon: const Icon(Icons.menu),
                       ),
                     ],
                   ),
                 ),
               ),
-              //blogs
+              //profile
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //fotoğraf cart curt
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 10, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: AssetImage(
+                            user["photo"] == false
+                                ? "assets/images/defaultpp.jpeg"
+                                : "assets/images/defaultpp.jpeg",
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "1",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text("Gönderi",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text("123",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("Takipçi",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text("1",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("Takip",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  //kullanıcıadı
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "mcuzlas",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  //katılma tarihi
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 0),
+                    child: Text(
+                      "Katılma tarihi: ${user["createdAt"].substring(0, 10)}",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  //profil düzenle
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    margin: EdgeInsets.all(20),
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      style: const ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.transparent),
+                          padding:
+                              MaterialStatePropertyAll(EdgeInsets.all(8.0)),
+                          elevation: MaterialStatePropertyAll(1.0),
+                          side: MaterialStatePropertyAll(
+                              BorderSide(width: 1.0, color: Colors.white))),
+                      child: const Text(
+                        "Profili Düzenle",
+                        style: TextStyle(fontSize: 13, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // blogs
               blogs.isEmpty
                   ? const Center(
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
                         child: Text(
-                          "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
+                          "Hiç gönderin yok.",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
@@ -131,7 +205,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   : Flexible(
                       child: RefreshIndicator(
                         onRefresh: () async {
-                          getFollowedsBlogs(token, user);
+                          getMyBlogs(token, user["_id"]);
                         },
                         child: ListView.builder(
                           padding: const EdgeInsets.all(10),
@@ -187,7 +261,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                               overflow: TextOverflow.ellipsis,
                                               softWrap: true,
                                               maxLines: 4,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.w900),
                                             ),
                                           ),
@@ -196,19 +270,22 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                 MainAxisAlignment.spaceAround,
                                             children: [
                                               Row(
-                                                children: const [
+                                                children: [
                                                   Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 5),
                                                     child: CircleAvatar(
                                                       radius: 15,
                                                       backgroundImage:
                                                           AssetImage(
-                                                        "assets/images/pp.jpeg",
+                                                        user["photo"] == false
+                                                            ? "assets/images/defaultpp.jpeg"
+                                                            : "assets/images/defaultpp.jpeg",
                                                       ),
                                                     ),
                                                   ),
-                                                  Text(
+                                                  const Text(
                                                     "mcuzlas",
                                                     style: TextStyle(
                                                       fontWeight:

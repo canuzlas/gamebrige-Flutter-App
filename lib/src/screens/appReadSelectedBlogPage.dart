@@ -222,7 +222,7 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
                                 ? blog["blog_title"]
                                 : "başlık yükleniyor...",
                             softWrap: true,
-                            style: TextStyle(fontWeight: FontWeight.w900),
+                            style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                         ),
                       ),

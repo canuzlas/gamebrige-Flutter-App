@@ -3,7 +3,7 @@ import 'package:gamebrige/src/screens/appBlogsPage.dart';
 import 'package:gamebrige/src/screens/appHomePage.dart';
 import 'package:gamebrige/src/screens/appSearchPage.dart';
 
-import 'appProfilePage.dart';
+import 'appMyProfilePage.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -42,7 +42,7 @@ class _BottomBarState extends State<BottomBar> {
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.search_rounded),
-              label: "Ara",
+              label: "Keşfet",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
