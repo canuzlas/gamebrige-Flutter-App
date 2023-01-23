@@ -75,9 +75,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 textColor: Colors.white,
                 fontSize: 16.0);
           } else {
-            suser = Provider((ref) => prefs.getString("user"));
+            print(decodedResponse);
+            await prefs.setString("user", jsonEncode(decodedResponse["user"]));
+            suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
             //ref.read(suser.state).state = jsonEncode(decodedResponse["user"]);
-            prefs.setString("user", jsonEncode(decodedResponse["user"]));
             Fluttertoast.showToast(
                 msg: "Giriş Başarılı !",
                 toastLength: Toast.LENGTH_LONG,

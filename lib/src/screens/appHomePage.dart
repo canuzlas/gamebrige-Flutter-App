@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'appStartPage.dart';
@@ -17,6 +18,7 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  bool gettingData = true;
   late SharedPreferences prefs;
   late bool deneme;
   var blogs = [];
@@ -60,6 +62,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             fontSize: 16.0);
       } else {
         setState(() {
+          gettingData = false;
           blogs = decodedResponse['blogs'];
         });
       }
@@ -118,121 +121,137 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
               //blogs
-              blogs.isEmpty
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
-                          style: TextStyle(fontSize: 18),
-                        ),
+              gettingData
+                  ? Container(
+                      height: 300,
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 100,
                       ),
                     )
-                  : Flexible(
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          getFollowedsBlogs(token, user);
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(10),
-                          itemCount: blogs.length,
-                          itemBuilder: (context, i) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, "/ReadSelectedBlog",
-                                    arguments: {"blog_id": blogs[i]["_id"]});
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 20),
-                                padding: const EdgeInsets.all(15),
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: const Color.fromRGBO(203, 241, 245, 1),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
+                  : blogs.isEmpty
+                      ? const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Text(
+                              "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        )
+                      : Flexible(
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              getFollowedsBlogs(token, user);
+                            },
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(10),
+                              itemCount: blogs.length,
+                              itemBuilder: (context, i) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, "/ReadSelectedBlog",
+                                        arguments: {
+                                          "blog_id": blogs[i]["_id"]
+                                        });
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    padding: const EdgeInsets.all(15),
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: const Color.fromRGBO(
+                                          203, 241, 245, 1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              Colors.black12.withOpacity(0.2),
+                                          spreadRadius: 2,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      constraints:
-                                          BoxConstraints(maxWidth: 100),
-                                      child: Image.asset(
-                                        "assets/images/login-bg.jpeg",
-                                        fit: BoxFit.fill,
-                                        width: 100,
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.topCenter,
-                                            padding: const EdgeInsets.only(
-                                              left: 20,
-                                              top: 0,
-                                            ),
-                                            child: Text(
-                                              "${blogs[i]["blog_title"]}",
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                              maxLines: 4,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w900),
-                                            ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 100),
+                                          child: Image.asset(
+                                            "assets/images/login-bg.jpeg",
+                                            fit: BoxFit.fill,
+                                            width: 100,
                                           ),
-                                          Row(
+                                        ),
+                                        Flexible(
+                                          child: Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
+                                              Container(
+                                                alignment: Alignment.topCenter,
+                                                padding: const EdgeInsets.only(
+                                                  left: 20,
+                                                  top: 0,
+                                                ),
+                                                child: Text(
+                                                  "${blogs[i]["blog_title"]}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  maxLines: 4,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w900),
+                                                ),
+                                              ),
                                               Row(
-                                                children: const [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundImage:
-                                                          AssetImage(
-                                                        "assets/images/pp.jpeg",
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Row(
+                                                    children: const [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 5),
+                                                        child: CircleAvatar(
+                                                          radius: 15,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                            "assets/images/pp.jpeg",
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
+                                                      Text(
+                                                        "mcuzlas",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   Text(
-                                                    "mcuzlas",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                    "${blogs[i]["createdAt"].substring(0, 10)}",
                                                   ),
                                                 ],
-                                              ),
-                                              Text(
-                                                "${blogs[i]["createdAt"].substring(0, 10)}",
-                                              ),
+                                              )
                                             ],
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
             ],
           )),
     );

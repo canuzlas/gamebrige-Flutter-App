@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'appStartPage.dart';
 
@@ -16,12 +18,20 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  bool gettingData = true;
   late var token;
   late var user;
+  late SharedPreferences prefs;
+
   var blogs = [];
 
   Future<bool> _onWillPop() async {
     return false;
+  }
+
+  getSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    //print(prefs.getString("user"));
   }
 
   getMyBlogs(token, userid) async {
@@ -52,6 +62,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             fontSize: 16.0);
       } else {
         setState(() {
+          gettingData = false;
           blogs = decodedResponse['blogs'];
         });
       }
@@ -61,6 +72,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    getSharedPreferences();
     token = ref.read(stoken);
     var getuser = ref.read(suser);
     user = jsonDecode(getuser);
@@ -72,38 +84,85 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-          backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
-          body: Column(
-            children: [
-              //header
-              SafeArea(
-                child: Container(
-                  padding: EdgeInsets.all(15),
+          drawer: Drawer(
+            backgroundColor: Color.fromRGBO(203, 241, 245, 1),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
                   decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: Colors.white),
-                    ),
+                    color: Color.fromRGBO(166, 227, 233, 1),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        "GAMEBRIGE",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundImage: AssetImage(
+                          user["photo"] == false
+                              ? "assets/images/defaultpp.jpeg"
+                              : "assets/images/defaultpp.jpeg",
+                        ),
                       ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.menu),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          user["username"],
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
                 ),
+                ListTile(
+                  title: const Text("Çıkış Yap"),
+                  onTap: () {
+                    prefs.remove("user");
+                    Navigator.pushNamed(context, "/Landing");
+                  },
+                ),
+                ListTile(
+                  title: const Text('Item 2'),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+          appBar: AppBar(
+            shape: Border(bottom: BorderSide(color: Colors.white, width: 1)),
+            elevation: 0.2,
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+                color: Colors.black,
               ),
+              Builder(builder: (context) {
+                return IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  color: Colors.black,
+                  icon: const Icon(Icons.menu),
+                );
+              })
+            ],
+            backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
+            automaticallyImplyLeading: false,
+            centerTitle: false,
+            title: const Text(
+              "GAMEBRIGE",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black),
+            ),
+          ),
+          backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
+          body: Column(
+            children: [
               //profile
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +194,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                         Column(
                           children: [
-                            Text("123",
+                            Text(user["followers"].length.toString(),
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             Text("Takipçi",
                                 style: TextStyle(fontWeight: FontWeight.bold))
@@ -143,7 +202,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                         Column(
                           children: [
-                            Text("1",
+                            Text((user["following"].length).toString(),
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             Text("Takip",
                                 style: TextStyle(fontWeight: FontWeight.bold))
@@ -156,7 +215,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "mcuzlas",
+                      user["username"],
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
@@ -191,125 +250,147 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ],
               ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.all(15),
+                  child: Text("PAYLAŞILAN BLOGLAR"),
+                ),
+              ),
               // blogs
-              blogs.isEmpty
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          "Hiç gönderin yok.",
-                          style: TextStyle(fontSize: 18),
-                        ),
+              gettingData
+                  ? Container(
+                      height: 300,
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 100,
                       ),
                     )
-                  : Flexible(
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          getMyBlogs(token, user["_id"]);
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(10),
-                          itemCount: blogs.length,
-                          itemBuilder: (context, i) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, "/ReadSelectedBlog",
-                                    arguments: {"blog_id": blogs[i]["_id"]});
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 20),
-                                padding: const EdgeInsets.all(15),
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: const Color.fromRGBO(203, 241, 245, 1),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
+                  : blogs.isEmpty
+                      ? const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Text(
+                              "Hiç gönderin yok.",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        )
+                      : Flexible(
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              getMyBlogs(token, user["_id"]);
+                            },
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(10),
+                              itemCount: blogs.length,
+                              itemBuilder: (context, i) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, "/ReadSelectedBlog",
+                                        arguments: {
+                                          "blog_id": blogs[i]["_id"]
+                                        });
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    padding: const EdgeInsets.all(15),
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: const Color.fromRGBO(
+                                          203, 241, 245, 1),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              Colors.black12.withOpacity(0.2),
+                                          spreadRadius: 2,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      constraints:
-                                          BoxConstraints(maxWidth: 100),
-                                      child: Image.asset(
-                                        "assets/images/login-bg.jpeg",
-                                        fit: BoxFit.fill,
-                                        width: 100,
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.topCenter,
-                                            padding: const EdgeInsets.only(
-                                              left: 20,
-                                              top: 0,
-                                            ),
-                                            child: Text(
-                                              "${blogs[i]["blog_title"]}",
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                              maxLines: 4,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w900),
-                                            ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 100),
+                                          child: Image.asset(
+                                            "assets/images/login-bg.jpeg",
+                                            fit: BoxFit.fill,
+                                            width: 100,
                                           ),
-                                          Row(
+                                        ),
+                                        Flexible(
+                                          child: Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 5),
-                                                    child: CircleAvatar(
-                                                      radius: 15,
-                                                      backgroundImage:
-                                                          AssetImage(
-                                                        user["photo"] == false
-                                                            ? "assets/images/defaultpp.jpeg"
-                                                            : "assets/images/defaultpp.jpeg",
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Text(
-                                                    "mcuzlas",
-                                                    style: TextStyle(
+                                              Container(
+                                                alignment: Alignment.topCenter,
+                                                padding: const EdgeInsets.only(
+                                                  left: 20,
+                                                  top: 0,
+                                                ),
+                                                child: Text(
+                                                  "${blogs[i]["blog_title"]}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  maxLines: 4,
+                                                  style: const TextStyle(
                                                       fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                          FontWeight.w900),
+                                                ),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(right: 5),
+                                                        child: CircleAvatar(
+                                                          radius: 15,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                            user["photo"] ==
+                                                                    false
+                                                                ? "assets/images/defaultpp.jpeg"
+                                                                : "assets/images/defaultpp.jpeg",
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const Text(
+                                                        "mcuzlas",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    "${blogs[i]["createdAt"].substring(0, 10)}",
                                                   ),
                                                 ],
-                                              ),
-                                              Text(
-                                                "${blogs[i]["createdAt"].substring(0, 10)}",
-                                              ),
+                                              )
                                             ],
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
             ],
           )),
     );

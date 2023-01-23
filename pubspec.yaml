@@ -44,6 +44,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   mailer: ^5.3.0
   fluttertoast: ^8.1.2
+  loading_animation_widget: ^1.2.0+4
   
 
 

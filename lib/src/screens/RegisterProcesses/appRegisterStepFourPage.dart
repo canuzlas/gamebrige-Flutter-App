@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../appStartPage.dart';
 
 class RegisterStepFourPage extends StatefulWidget {
   const RegisterStepFourPage({Key? key}) : super(key: key);
@@ -99,6 +102,7 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
             prefs.remove("willregusername");
             prefs.remove("otpcode");
             prefs.setString("user", jsonEncode(decodedResponse["user"]));
+            suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
             Fluttertoast.showToast(
                 msg: "Kayıt Olma Başarılı!",
                 toastLength: Toast.LENGTH_LONG,

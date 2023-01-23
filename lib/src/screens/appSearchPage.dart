@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'appStartPage.dart';
 
@@ -18,11 +20,18 @@ class SearchPage extends ConsumerStatefulWidget {
 class _SearchPageState extends ConsumerState<SearchPage> {
   var users = [];
   var bestusers = [];
+  late SharedPreferences prefs;
+
   late var token;
   late var user;
 
   Future<bool> _onWillPop() async {
     return false;
+  }
+
+  getSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    //print(prefs.getString("user"));
   }
 
   searchUser(token, userid, txt) async {
@@ -144,7 +153,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       ),
     );
     var decodedResponse = jsonDecode(response.body);
-    print(decodedResponse);
+    //print(decodedResponse);
     if (decodedResponse['appId'] != null) {
       Navigator.pushNamed(context, '/404');
     } else {
@@ -179,6 +188,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 textColor: Colors.white,
                 fontSize: 16.0);
           } else {
+            print(jsonEncode(decodedResponse["user"]));
+            suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
+            prefs.setString("user", jsonEncode(decodedResponse["user"]));
             Fluttertoast.showToast(
                 msg: "Takip edildi!",
                 toastLength: Toast.LENGTH_LONG,
@@ -196,6 +208,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   @override
   void initState() {
     super.initState();
+    getSharedPreferences();
     token = ref.read(stoken);
     var getuser = ref.read(suser);
     user = jsonDecode(getuser);
@@ -288,7 +301,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     itemBuilder: (context, i) {
                       return GestureDetector(
                         onTap: () {
-                          print("dasd");
+                          Navigator.pushNamed(context, "/OtherProfile",
+                              arguments: {"user_id": users[i]["_id"]});
                         },
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 10),
@@ -364,83 +378,100 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   style: TextStyle(fontSize: 20),
                 ),
               ),
-              Flexible(
-                child: Container(
-                  width: 300,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: bestusers.length,
-                    itemBuilder: (context, i) {
-                      return GestureDetector(
-                        onTap: () {
-                          print("dasd");
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: const Color.fromRGBO(203, 241, 245, 1),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.green.withOpacity(0.3),
-                                spreadRadius: 2,
-                                blurRadius: 7,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundImage: AssetImage(
-                                    bestusers[i]["photo"] == false
-                                        ? "assets/images/defaultpp.jpeg"
-                                        : "assets/images/defaultpp.jpeg",
-                                  ),
+              bestusers.isEmpty
+                  ? Container(
+                      height: 300,
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 100,
+                      ),
+                    )
+                  : Flexible(
+                      child: Container(
+                        width: 300,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(10),
+                          itemCount: bestusers.length,
+                          itemBuilder: (context, i) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, "/OtherProfile",
+                                    arguments: {
+                                      "user_id": bestusers[i]["_id"]
+                                    });
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: const Color.fromRGBO(203, 241, 245, 1),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.green.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 7,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: AssetImage(
+                                          bestusers[i]["photo"] == false
+                                              ? "assets/images/defaultpp.jpeg"
+                                              : "assets/images/defaultpp.jpeg",
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      bestusers[i]["username"],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.bottomCenter,
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          followPerson(token, user["_id"],
+                                              bestusers[i]["_id"]);
+                                        },
+                                        style: const ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.transparent),
+                                            padding: MaterialStatePropertyAll(
+                                                EdgeInsets.all(8.0)),
+                                            elevation:
+                                                MaterialStatePropertyAll(1.0),
+                                            side: MaterialStatePropertyAll(
+                                                BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white))),
+                                        child: const Text(
+                                          "Takip Et",
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Text(
-                                bestusers[i]["username"],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.bottomCenter,
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    followPerson(token, user["_id"],
-                                        bestusers[i]["_id"]);
-                                  },
-                                  style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Colors.transparent),
-                                      padding: MaterialStatePropertyAll(
-                                          EdgeInsets.all(8.0)),
-                                      elevation: MaterialStatePropertyAll(1.0),
-                                      side: MaterialStatePropertyAll(BorderSide(
-                                          width: 1.0, color: Colors.white))),
-                                  child: const Text(
-                                    "Takip Et",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.white),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+                      ),
+                    ),
             ],
           )),
     );

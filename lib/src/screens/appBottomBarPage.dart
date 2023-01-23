@@ -37,11 +37,11 @@ class _BottomBarState extends State<BottomBar> {
               label: "Anasayfa",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
-              icon: Icon(Icons.comment),
+              icon: Icon(Icons.comment_bank_outlined),
               label: "Bloglarım",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
-              icon: Icon(Icons.search_rounded),
+              icon: Icon(Icons.content_paste_search),
               label: "Keşfet",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
