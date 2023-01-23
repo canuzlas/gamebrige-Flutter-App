@@ -241,7 +241,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/BlogShare');
+                        },
                         icon: const Icon(Icons.add),
                       ),
                       IconButton(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gamebrige/src/screens/appBlogsPage.dart';
+import 'package:gamebrige/src/screens/appDiscoverPage.dart';
 import 'package:gamebrige/src/screens/appHomePage.dart';
 import 'package:gamebrige/src/screens/appSearchPage.dart';
 
@@ -15,7 +15,7 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   int selectedIndex = 0;
   late ProfilePage profilePage = const ProfilePage();
-  late BlogsPage blogsPage = const BlogsPage();
+  late DiscoverPage blogsPage = const DiscoverPage();
   late HomePage homePage = const HomePage();
   late SearchPage searchPage = const SearchPage();
   late List<Widget> allPages;
@@ -37,12 +37,12 @@ class _BottomBarState extends State<BottomBar> {
               label: "Anasayfa",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
-              icon: Icon(Icons.comment_bank_outlined),
-              label: "Bloglarım",
+              icon: Icon(Icons.search_outlined),
+              label: "Keşfet",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.content_paste_search),
-              label: "Keşfet",
+              label: "Kişi Ara",
               backgroundColor: Color.fromRGBO(113, 201, 206, 1)),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),

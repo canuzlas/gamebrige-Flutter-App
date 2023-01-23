@@ -121,7 +121,7 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
           actions: [
             IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.error_outline),
               color: Colors.black,
             ),
           ],
@@ -284,7 +284,7 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
                                         constraints:
                                             BoxConstraints(maxWidth: 100),
                                         child: Image.asset(
-                                          "assets/images/login-bg.jpeg",
+                                          "assets/images/startpage-bg.jpeg",
                                           fit: BoxFit.fill,
                                           width: 100,
                                         ),
@@ -331,9 +331,10 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    const Text(
-                                                      "mcuzlas",
-                                                      style: TextStyle(
+                                                    Text(
+                                                      blogs[i][
+                                                          "blog_author_username"],
+                                                      style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),

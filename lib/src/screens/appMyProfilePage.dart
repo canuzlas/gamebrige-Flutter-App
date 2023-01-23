@@ -117,15 +117,24 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ),
                 ListTile(
-                  title: const Text("Çıkış Yap"),
+                  title: const Text('Blog Paylaş'),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/BlogShare');
+                  },
+                ),
+                ListTile(
+                  title: const Text('Profili Düzenle'),
+                  onTap: () {},
+                ),
+                ListTile(
+                  title: const Text(
+                    "Çıkış Yap",
+                    style: TextStyle(color: Colors.red),
+                  ),
                   onTap: () {
                     prefs.remove("user");
                     Navigator.pushNamed(context, "/Landing");
                   },
-                ),
-                ListTile(
-                  title: const Text('Item 2'),
-                  onTap: () {},
                 ),
               ],
             ),
@@ -135,7 +144,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             elevation: 0.2,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/BlogShare');
+                },
                 icon: const Icon(Icons.add),
                 color: Colors.black,
               ),
@@ -185,10 +196,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              "1",
+                              blogs.length.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Text("Gönderi",
+                            const Text("Gönderi",
                                 style: TextStyle(fontWeight: FontWeight.bold))
                           ],
                         ),
@@ -228,25 +239,52 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  //profil düzenle
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.all(20),
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.transparent),
-                          padding:
-                              MaterialStatePropertyAll(EdgeInsets.all(8.0)),
-                          elevation: MaterialStatePropertyAll(1.0),
-                          side: MaterialStatePropertyAll(
-                              BorderSide(width: 1.0, color: Colors.white))),
-                      child: const Text(
-                        "Profili Düzenle",
-                        style: TextStyle(fontSize: 13, color: Colors.white),
+
+                  //profil düzenle blog paylaş
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: EdgeInsets.all(20),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          style: const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  Color.fromRGBO(203, 241, 245, 1)),
+                              padding:
+                                  MaterialStatePropertyAll(EdgeInsets.all(5.0)),
+                              elevation: MaterialStatePropertyAll(1.0),
+                              side: MaterialStatePropertyAll(
+                                  BorderSide(width: 1.0, color: Colors.white))),
+                          child: const Text(
+                            "Profili Düzenle",
+                            style: TextStyle(fontSize: 13, color: Colors.black),
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: EdgeInsets.all(20),
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/BlogShare');
+                          },
+                          style: const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  Color.fromRGBO(203, 241, 245, 1)),
+                              padding:
+                                  MaterialStatePropertyAll(EdgeInsets.all(5.0)),
+                              elevation: MaterialStatePropertyAll(1.0),
+                              side: MaterialStatePropertyAll(
+                                  BorderSide(width: 1.0, color: Colors.white))),
+                          child: const Text(
+                            "Blog Paylaş",
+                            style: TextStyle(fontSize: 13, color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -317,7 +355,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           constraints:
                                               BoxConstraints(maxWidth: 100),
                                           child: Image.asset(
-                                            "assets/images/login-bg.jpeg",
+                                            "assets/images/startpage-bg.jpeg",
                                             fit: BoxFit.fill,
                                             width: 100,
                                           ),
@@ -366,9 +404,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                           ),
                                                         ),
                                                       ),
-                                                      const Text(
-                                                        "mcuzlas",
-                                                        style: TextStyle(
+                                                      Text(
+                                                        blogs[i][
+                                                            "blog_author_username"],
+                                                        style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),

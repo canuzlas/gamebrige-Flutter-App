@@ -6,11 +6,12 @@ import 'package:gamebrige/src/screens/appLandingPage.dart';
 import 'package:gamebrige/src/screens/appLoginPage.dart';
 import 'package:gamebrige/src/screens/appOtherProfilePage.dart';
 import 'package:gamebrige/src/screens/appReadSelectedBlogPage.dart';
+import 'package:gamebrige/src/screens/appShareBlogPage.dart';
+import 'package:gamebrige/src/screens/appStartPage.dart';
 
 import '../screens/404/dortyuzdort.dart';
 import '../screens/RegisterProcesses/appRegisterStepFourPage.dart';
 import '../screens/RegisterProcesses/appRegisterStepThreePage.dart';
-import '../screens/appStartPage.dart';
 
 class GeneratedRouter {
   static Route? router(RouteSettings settings) {
@@ -49,6 +50,8 @@ class GeneratedRouter {
         return MaterialPageRoute(
             builder: (context) =>
                 OtherProfilePage(person_id: settings.arguments));
+      case '/BlogShare':
+        return MaterialPageRoute(builder: (context) => BlogSharePage());
     }
     return null;
   }

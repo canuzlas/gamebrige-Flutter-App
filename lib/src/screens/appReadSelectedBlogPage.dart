@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'appStartPage.dart';
 
@@ -20,6 +21,7 @@ class ReadSelectedBlogPage extends ConsumerStatefulWidget {
 class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
   late bool liked = false;
   late var blog = {};
+  late var author = {};
   late var token;
 
   _likeblog() {
@@ -70,6 +72,7 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
           //print(decodedResponse);
           setState(() {
             blog = decodedResponse['blog'];
+            author = decodedResponse['author'];
           });
         }
       }
@@ -148,94 +151,115 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
               child: Column(
                 children: [
                   //author
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: const Color.fromRGBO(203, 241, 245, 1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12.withOpacity(0.1),
-                            spreadRadius: 2,
-                            blurRadius: 7,
-                            offset: const Offset(
-                                0, 1), // changes position of shadow
+                  author.isEmpty
+                      ? Flexible(
+                          child: Container(
+                            height: 300,
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.white,
+                              size: 100,
+                            ),
                           ),
-                        ]),
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundImage: AssetImage(
-                              "assets/images/pp.jpeg",
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: const Color.fromRGBO(203, 241, 245, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 7,
+                                  offset: const Offset(
+                                      0, 1), // changes position of shadow
+                                ),
+                              ]),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                "/OtherProfile",
+                                arguments: {"user_id": author["_id"]},
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: CircleAvatar(
+                                    radius: 35,
+                                    backgroundImage: AssetImage(
+                                      author["photo"] == false
+                                          ? "assets/images/defaultpp.jpeg"
+                                          : "assets/images/defaultpp.jpeg",
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  author["username"],
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Spacer(),
+                                PopupMenuButton(
+                                    icon: const Icon(Icons.accessibility),
+                                    color:
+                                        const Color.fromRGBO(113, 201, 206, 1),
+                                    itemBuilder: (context) {
+                                      return [
+                                        PopupMenuItem(
+                                          onTap: () {
+                                            print("fnc gelecek");
+                                          },
+                                          child: const Text(
+                                            "Bloğu Şikayet Et",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ];
+                                    }),
+                              ],
                             ),
                           ),
                         ),
-                        const Text(
-                          "mcuzlas",
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
-                        ),
-                        const Spacer(),
-                        PopupMenuButton(
-                            icon: const Icon(Icons.accessibility),
-                            color: const Color.fromRGBO(113, 201, 206, 1),
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  onTap: () {
-                                    print("fnc gelecek");
-                                  },
-                                  child: const Text(
-                                    "Şikayet Et",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ];
-                            }),
-                      ],
-                    ),
-                  ),
                   //data
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(15),
-                        constraints: BoxConstraints(maxWidth: 150),
-                        child: Image.asset(
-                          "assets/images/login-bg.jpeg",
-                          fit: BoxFit.fill,
-                          width: 150,
-                          height: 150,
-                        ),
-                      ),
-                      Flexible(
-                        child: Container(
-                          alignment: Alignment.topCenter,
-                          padding: const EdgeInsets.only(
-                            left: 0,
-                            top: 0,
+                  blog.isEmpty
+                      ? Flexible(
+                          child: Container(
+                            height: 300,
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.white,
+                              size: 100,
+                            ),
                           ),
+                        )
+                      : Container(
+                          alignment: Alignment.topCenter,
+                          padding: const EdgeInsets.all(20),
                           child: Text(
-                            blog.isNotEmpty
-                                ? blog["blog_title"]
-                                : "başlık yükleniyor...",
+                            blog["blog_title"],
                             softWrap: true,
                             style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Flexible(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(10),
-                      child: Text(blog.isNotEmpty
-                          ? blog["blog_text"]
-                          : "blog yükleniyor..."),
-                    ),
-                  ),
+                  blog.isEmpty
+                      ? Flexible(
+                          child: Container(
+                            height: 300,
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.white,
+                              size: 100,
+                            ),
+                          ),
+                        )
+                      : Flexible(
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.all(10),
+                            child: Text(blog["blog_text"]),
+                          ),
+                        ),
                   Container(
                     alignment: Alignment.bottomRight,
                     child: IconButton(

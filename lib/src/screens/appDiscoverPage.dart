@@ -10,14 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'appStartPage.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class DiscoverPage extends ConsumerStatefulWidget {
+  const DiscoverPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  ConsumerState<DiscoverPage> createState() => _DiscoverPageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   bool gettingData = true;
   late SharedPreferences prefs;
   var blogs = [];
@@ -33,18 +33,14 @@ class _HomePageState extends ConsumerState<HomePage> {
     return false;
   }
 
-  getFollowedsBlogs(token, user) async {
-    var url = "${dotenv.env['API_URL']!}api/getfollowedsblogs";
+  getAllBlogs(token) async {
+    var url = "${dotenv.env['API_URL']!}api/getallblogs";
     //apiden blogları alıyoruz
     var response = await http.post(Uri.parse(url),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode({
-          'appId': dotenv.env['APP_ID'],
-          'token': token,
-          'user': user,
-        }));
+        body: jsonEncode({'appId': dotenv.env['APP_ID'], 'token': token}));
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
       Navigator.pushNamed(context, '/404');
@@ -75,7 +71,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     user = ref.read(suser);
     //print(user);
     getSharedPreferences();
-    getFollowedsBlogs(token, user);
+    getAllBlogs(token);
   }
 
   @override
@@ -123,7 +119,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               Padding(
                 padding: EdgeInsets.all(20),
-                child: Text("Takip Ettiğin Kişilerin Gönderileri"),
+                child: Text("Tüm dünyadan senin için seçtiklerimiz."),
               ),
               //blogs
               gettingData
@@ -147,7 +143,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       : Flexible(
                           child: RefreshIndicator(
                             onRefresh: () async {
-                              getFollowedsBlogs(token, user);
+                              getAllBlogs(token);
                             },
                             child: ListView.builder(
                               padding: const EdgeInsets.all(10),
@@ -221,7 +217,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                   GestureDetector(
                                                     child: Row(
                                                       children: [
-                                                        const Padding(
+                                                        Padding(
                                                           padding:
                                                               EdgeInsets.only(
                                                                   right: 5),
@@ -235,10 +231,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                         ),
                                                         Text(
                                                           blogs[i][
-                                                                  "blog_author_username"]
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
+                                                              "blog_author_username"],
+                                                          style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
