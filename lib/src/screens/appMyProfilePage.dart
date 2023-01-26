@@ -69,6 +69,67 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     }
   }
 
+  deleteBlog(id, blog) async {
+    var url = "${dotenv.env['API_URL']!}api/deleteblog";
+    //apiden blogları alıyoruz
+    var response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        {
+          'appId': dotenv.env['APP_ID'],
+          'token': token,
+          'blog_id': id,
+        },
+      ),
+    );
+    var decodedResponse = jsonDecode(response.body);
+    if (decodedResponse['appId'] != null) {
+      Navigator.pushNamed(context, '/404');
+    } else {
+      if (decodedResponse['tokenError'] != null) {
+        Fluttertoast.showToast(
+            msg:
+                "Oturum süreniz dolmuştur lütfen uygulamayı yeniden başlatın.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        if (decodedResponse['error'] == false) {
+          Fluttertoast.showToast(
+              msg: "Blog Silindi!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          setState(() {
+            blogs.remove(blog);
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "Hata oluştu!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
+    }
+  }
+
+  updateBlog(context, i) {
+    Navigator.pushNamed(context, '/UpdateBlog', arguments: blogs[i]);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -421,7 +482,39 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               )
                                             ],
                                           ),
-                                        )
+                                        ),
+                                        PopupMenuButton(
+                                            icon: const Icon(Icons.settings),
+                                            onSelected: (result) {
+                                              result == 0
+                                                  ? updateBlog(context, i)
+                                                  : null;
+                                            },
+                                            color: const Color.fromRGBO(
+                                                113, 201, 206, 1),
+                                            itemBuilder: (context) {
+                                              return [
+                                                PopupMenuItem(
+                                                  onTap: () {
+                                                    deleteBlog(blogs[i]["_id"],
+                                                        blogs[i]);
+                                                  },
+                                                  child: const Text(
+                                                    "Bloğu Sil",
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ),
+                                                ),
+                                                const PopupMenuItem(
+                                                  value: 0,
+                                                  child: Text(
+                                                    "Bloğu Düzenle",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ];
+                                            })
                                       ],
                                     ),
                                   ),

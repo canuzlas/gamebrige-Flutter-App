@@ -170,7 +170,7 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
                             Column(
                               children: [
                                 Text(
-                                  "1",
+                                  blogs.length.toString(),
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 Text("Gönderi",

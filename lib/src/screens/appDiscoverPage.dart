@@ -68,7 +68,8 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   void initState() {
     super.initState();
     token = ref.read(stoken);
-    user = ref.read(suser);
+    var res = ref.read(suser);
+    user = jsonDecode(res);
     //print(user);
     getSharedPreferences();
     getAllBlogs(token);
@@ -225,7 +226,10 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                                                             radius: 15,
                                                             backgroundImage:
                                                                 AssetImage(
-                                                              "assets/images/pp.jpeg",
+                                                              blogs[i]["blog_author_photo"] ==
+                                                                      false
+                                                                  ? "assets/images/defaultpp.jpeg"
+                                                                  : "assets/images/defaultpp.jpeg",
                                                             ),
                                                           ),
                                                         ),
@@ -240,14 +244,18 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                                                       ],
                                                     ),
                                                     onTap: () {
-                                                      Navigator.pushNamed(
-                                                        context,
-                                                        "/OtherProfile",
-                                                        arguments: {
-                                                          "user_id": blogs[i]
-                                                              ["blog_author"]
-                                                        },
-                                                      );
+                                                      blogs[i]["blog_author"] !=
+                                                              user["_id"]
+                                                          ? Navigator.pushNamed(
+                                                              context,
+                                                              "/OtherProfile",
+                                                              arguments: {
+                                                                "user_id": blogs[
+                                                                        i][
+                                                                    "blog_author"]
+                                                              },
+                                                            )
+                                                          : null;
                                                     },
                                                   ),
                                                   Text(

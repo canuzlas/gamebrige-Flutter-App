@@ -8,6 +8,7 @@ import 'package:gamebrige/src/screens/appOtherProfilePage.dart';
 import 'package:gamebrige/src/screens/appReadSelectedBlogPage.dart';
 import 'package:gamebrige/src/screens/appShareBlogPage.dart';
 import 'package:gamebrige/src/screens/appStartPage.dart';
+import 'package:gamebrige/src/screens/appUpdateBlogPage.dart';
 
 import '../screens/404/dortyuzdort.dart';
 import '../screens/RegisterProcesses/appRegisterStepFourPage.dart';
@@ -51,7 +52,10 @@ class GeneratedRouter {
             builder: (context) =>
                 OtherProfilePage(person_id: settings.arguments));
       case '/BlogShare':
-        return MaterialPageRoute(builder: (context) => BlogSharePage());
+        return MaterialPageRoute(builder: (context) => const BlogSharePage());
+      case '/UpdateBlog':
+        return MaterialPageRoute(
+            builder: (context) => BlogUpdatePage(blog: settings.arguments));
     }
     return null;
   }

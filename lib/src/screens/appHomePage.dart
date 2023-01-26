@@ -221,7 +221,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                   GestureDetector(
                                                     child: Row(
                                                       children: [
-                                                        const Padding(
+                                                        Padding(
                                                           padding:
                                                               EdgeInsets.only(
                                                                   right: 5),
@@ -229,7 +229,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                             radius: 15,
                                                             backgroundImage:
                                                                 AssetImage(
-                                                              "assets/images/pp.jpeg",
+                                                              blogs[i]["blog_author_photo"] ==
+                                                                      false
+                                                                  ? "assets/images/defaultpp.jpeg"
+                                                                  : "assets/images/defaultpp.jpeg",
                                                             ),
                                                           ),
                                                         ),

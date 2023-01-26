@@ -22,6 +22,7 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
   late bool liked = false;
   late var blog = {};
   late var author = {};
+  late var user;
   late var token;
 
   _likeblog() {
@@ -84,6 +85,8 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
     super.initState();
     print(widget.blogId["blog_id"]);
     token = ref.read(stoken);
+    var res = ref.read(suser);
+    user = jsonDecode(res);
     getBlog(token);
   }
 
@@ -176,11 +179,13 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
                               ]),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                "/OtherProfile",
-                                arguments: {"user_id": author["_id"]},
-                              );
+                              author["_id"] != user["_id"]
+                                  ? Navigator.pushNamed(
+                                      context,
+                                      "/OtherProfile",
+                                      arguments: {"user_id": author["_id"]},
+                                    )
+                                  : null;
                             },
                             child: Row(
                               children: [
