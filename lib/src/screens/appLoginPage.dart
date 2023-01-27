@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,6 +80,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             await prefs.setString("user", jsonEncode(decodedResponse["user"]));
             suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
             //ref.read(suser.state).state = jsonEncode(decodedResponse["user"]);
+            try {
+              UserCredential userCredential =
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: decodedResponse["user"]["mail"],
+                password: pass,
+              );
+              await prefs.setString(
+                "fbuser",
+                jsonEncode(userCredential.user?.uid),
+              );
+            } on FirebaseAuthException catch (e) {
+            } catch (e) {
+              Fluttertoast.showToast(
+                  msg: "Firebase Hata .! Lütfen Giriş Yap.!",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.transparent,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
             Fluttertoast.showToast(
                 msg: "Giriş Başarılı !",
                 toastLength: Toast.LENGTH_LONG,

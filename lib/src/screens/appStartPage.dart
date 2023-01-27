@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  FirebaseDatabase database = FirebaseDatabase.instance;
+
   late Map token = {};
   late SharedPreferences prefs;
 
@@ -38,6 +41,17 @@ class _StartPageState extends State<StartPage> {
       //apiden token alıyoruz
       var response = await http.get(Uri.parse(url));
       print(response.body);
+      var u_id = jsonDecode(prefs.getString("fbuser").toString());
+      print(u_id);
+      //deneme
+      final DatabaseReference reference =
+          FirebaseDatabase.instance.ref().child('Messages/${u_id}');
+      database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+      DatabaseReference newPostRef = reference.push();
+      newPostRef.set({"dasdd": "2"});
+
+      //deneme
+
       token = jsonDecode(response.body);
       //token geldi mi?
       if (token["token"] != null) {

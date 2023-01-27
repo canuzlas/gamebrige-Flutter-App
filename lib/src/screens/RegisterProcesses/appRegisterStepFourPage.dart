@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,6 +98,24 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
                 textColor: Colors.white,
                 fontSize: 16.0);
           } else {
+            //firebase register;
+            try {
+              UserCredential userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                      email: prefs.getString("willregmail").toString(),
+                      password: pass.toString());
+            } on FirebaseAuthException catch (e) {
+            } catch (e) {
+              Fluttertoast.showToast(
+                  msg: "Firebase Hata .! Lütfen Giriş Yap.!",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.transparent,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+
             prefs.remove("deneme");
             prefs.remove("willregmail");
             prefs.remove("willregusername");
