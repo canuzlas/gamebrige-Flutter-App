@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../appStartPage.dart';
+import '../appMain/appStartPage.dart';
 
 class RegisterStepFourPage extends StatefulWidget {
   const RegisterStepFourPage({Key? key}) : super(key: key);
@@ -59,36 +59,34 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
           textColor: Colors.white,
           fontSize: 16.0);
     } else {
-      var url = "${dotenv.env['API_URL']!}api/register";
-      var response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(
-          {
-            'appId': dotenv.env['APP_ID'],
-            'username': prefs.getString("willregusername"),
-            'mail': prefs.getString("willregmail"),
-            'pass': pass.toString()
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: prefs.getString("willregmail").toString(),
+                password: pass.toString());
+
+        var url = "${dotenv.env['API_URL']!}api/register";
+        var response = await http.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
           },
-        ),
-      );
-      var decodedResponse = jsonDecode(response.body);
-      if (decodedResponse['appId'] != null) {
-        Navigator.pushNamed(context, '/404');
-      } else {
-        if (decodedResponse['error'] != null) {
-          Fluttertoast.showToast(
-              msg: "Sistemsel Hata.!",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.TOP,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.transparent,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          body: jsonEncode(
+            {
+              'appId': dotenv.env['APP_ID'],
+              'username': prefs.getString("willregusername"),
+              'mail': prefs.getString("willregmail"),
+              'pass': pass.toString(),
+              'fbuid': userCredential.user?.uid
+            },
+          ),
+        );
+        var decodedResponse = jsonDecode(response.body);
+        if (decodedResponse['appId'] != null) {
+          Navigator.pushNamed(context, '/404');
         } else {
-          if (decodedResponse['register'] == false) {
+          if (decodedResponse['error'] != null) {
+            await FirebaseAuth.instance.currentUser?.delete();
             Fluttertoast.showToast(
                 msg: "Sistemsel Hata.!",
                 toastLength: Toast.LENGTH_LONG,
@@ -98,41 +96,44 @@ class _RegisterStepFourPageState extends State<RegisterStepFourPage> {
                 textColor: Colors.white,
                 fontSize: 16.0);
           } else {
-            //firebase register;
-            try {
-              UserCredential userCredential = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: prefs.getString("willregmail").toString(),
-                      password: pass.toString());
-            } on FirebaseAuthException catch (e) {
-            } catch (e) {
+            if (decodedResponse['register'] == false) {
               Fluttertoast.showToast(
-                  msg: "Firebase Hata .! Lütfen Giriş Yap.!",
+                  msg: "Sistemsel Hata.!",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.TOP,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.transparent,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            } else {
+              prefs.remove("deneme");
+              prefs.remove("willregmail");
+              prefs.remove("willregusername");
+              prefs.remove("otpcode");
+              prefs.setString("user", jsonEncode(decodedResponse["user"]));
+              suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
+              Fluttertoast.showToast(
+                  msg: "Kayıt Olma Başarılı!",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 1,
                   backgroundColor: Colors.transparent,
                   textColor: Colors.white,
                   fontSize: 16.0);
+              Navigator.pushNamed(context, '/Tab');
             }
-
-            prefs.remove("deneme");
-            prefs.remove("willregmail");
-            prefs.remove("willregusername");
-            prefs.remove("otpcode");
-            prefs.setString("user", jsonEncode(decodedResponse["user"]));
-            suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
-            Fluttertoast.showToast(
-                msg: "Kayıt Olma Başarılı!",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.transparent,
-                textColor: Colors.white,
-                fontSize: 16.0);
-            Navigator.pushNamed(context, '/Tab');
           }
         }
+      } on FirebaseAuthException catch (e) {
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: "Firebase Hata.! Lüten uygulamayı tekrar çalıştır.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     }
   }

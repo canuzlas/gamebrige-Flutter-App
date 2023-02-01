@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'appStartPage.dart';
+import '../appMain/appStartPage.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -114,7 +114,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                         icon: const Icon(Icons.notifications),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/AllMessages');
+                        },
                         icon: const Icon(Icons.message_outlined),
                       ),
                     ],

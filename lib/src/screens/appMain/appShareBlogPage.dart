@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-import 'appStartPage.dart';
+import '../appMain/appStartPage.dart';
 
 class BlogSharePage extends ConsumerStatefulWidget {
   const BlogSharePage({Key? key}) : super(key: key);
@@ -114,7 +114,9 @@ class _BlogSharePageState extends ConsumerState<BlogSharePage> {
                       icon: const Icon(Icons.notifications),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/AllMessages');
+                      },
                       icon: const Icon(Icons.message_outlined),
                     ),
                   ],

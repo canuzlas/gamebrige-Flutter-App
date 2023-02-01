@@ -43,14 +43,6 @@ class _StartPageState extends State<StartPage> {
       print(response.body);
       var u_id = jsonDecode(prefs.getString("fbuser").toString());
       print(u_id);
-      //deneme
-      final DatabaseReference reference =
-          FirebaseDatabase.instance.ref().child('Messages/${u_id}');
-      database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
-      DatabaseReference newPostRef = reference.push();
-      newPostRef.set({"dasdd": "2"});
-
-      //deneme
 
       token = jsonDecode(response.body);
       //token geldi mi?

@@ -251,7 +251,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         icon: const Icon(Icons.notifications),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/AllMessages');
+                        },
                         icon: const Icon(Icons.message_outlined),
                       ),
                     ],

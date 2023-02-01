@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gamebrige/src/screens/appDiscoverPage.dart';
-import 'package:gamebrige/src/screens/appHomePage.dart';
-import 'package:gamebrige/src/screens/appSearchPage.dart';
+import 'package:gamebrige/src/screens/appMain/appDiscoverPage.dart';
+import 'package:gamebrige/src/screens/appMain/appHomePage.dart';
+import 'package:gamebrige/src/screens/appMain/appSearchPage.dart';
 
-import 'appMyProfilePage.dart';
+import '../appMain/appMyProfilePage.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);

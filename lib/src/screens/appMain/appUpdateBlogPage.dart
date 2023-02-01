@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-import 'appStartPage.dart';
+import '../appMain/appStartPage.dart';
 
 class BlogUpdatePage extends ConsumerStatefulWidget {
   late var blog;

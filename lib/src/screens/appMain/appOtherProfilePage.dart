@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'appStartPage.dart';
+import '../appMain/appStartPage.dart';
 
 class OtherProfilePage extends ConsumerStatefulWidget {
   late var person_id;

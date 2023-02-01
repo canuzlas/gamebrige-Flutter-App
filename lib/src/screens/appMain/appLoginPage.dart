@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'appStartPage.dart';
+import '../appMain/appStartPage.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -86,14 +86,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 email: decodedResponse["user"]["mail"],
                 password: pass,
               );
-              await prefs.setString(
-                "fbuser",
-                jsonEncode(userCredential.user?.uid),
-              );
             } on FirebaseAuthException catch (e) {
             } catch (e) {
               Fluttertoast.showToast(
-                  msg: "Firebase Hata .! Lütfen Giriş Yap.!",
+                  msg: "Firebase Hata .! Lütfen Tekrar Giriş Yap.!",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 1,

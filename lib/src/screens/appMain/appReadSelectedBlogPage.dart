@@ -126,7 +126,9 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
                     icon: const Icon(Icons.notifications),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/AllMessages');
+                    },
                     icon: const Icon(Icons.message_outlined),
                   ),
                 ],

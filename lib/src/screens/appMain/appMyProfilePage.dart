@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -192,8 +193,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     "Çıkış Yap",
                     style: TextStyle(color: Colors.red),
                   ),
-                  onTap: () {
+                  onTap: () async {
                     prefs.remove("user");
+                    prefs.remove("fbuser");
+                    await FirebaseAuth.instance.signOut();
                     Navigator.pushNamed(context, "/Landing");
                   },
                 ),
