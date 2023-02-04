@@ -93,6 +93,12 @@ class _SendMessagePageState extends ConsumerState<SendMessagePage> {
                     ),
                     child: Row(
                       children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back_ios),
+                        ),
                         const Text(
                           "Mesaj Gönder",
                           style: TextStyle(

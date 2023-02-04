@@ -159,7 +159,7 @@ class _BlogSharePageState extends ConsumerState<BlogSharePage> {
                             child: Form(
                               child: TextField(
                                 maxLength: 60,
-                                maxLines: null,
+                                maxLines: 2,
                                 decoration: InputDecoration(
                                   labelStyle: TextStyle(color: Colors.black),
                                   enabledBorder: OutlineInputBorder(

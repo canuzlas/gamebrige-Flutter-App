@@ -314,32 +314,42 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceAround,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 5),
-                                                      child: CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundImage:
-                                                            AssetImage(
-                                                          person["photo"] ==
-                                                                  false
-                                                              ? "assets/images/defaultpp.jpeg"
-                                                              : "assets/images/defaultpp.jpeg",
+                                                Flexible(
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 5,
+                                                                left: 8),
+                                                        child: CircleAvatar(
+                                                          radius: 15,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                            person["photo"] ==
+                                                                    false
+                                                                ? "assets/images/defaultpp.jpeg"
+                                                                : "assets/images/defaultpp.jpeg",
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      blogs[i][
-                                                          "blog_author_username"],
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                      Flexible(
+                                                        child: Text(
+                                                          blogs[i][
+                                                              "blog_author_username"],
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          softWrap: true,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
                                                 Text(
                                                   "${blogs[i]["createdAt"].substring(0, 10)}",

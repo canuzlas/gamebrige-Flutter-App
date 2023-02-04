@@ -18,7 +18,7 @@ class RegisterStepOnePage extends StatefulWidget {
 
 class _RegisterStepOnePageState extends State<RegisterStepOnePage> {
   //generated otp code
-  int code = Random().nextInt(999999);
+  int code = 100000 + Random().nextInt(900000);
   late SharedPreferences prefs;
 
   String email = "";

@@ -167,10 +167,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               : "assets/images/defaultpp.jpeg",
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
+                      Flexible(
                         child: Text(
                           user["username"],
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -426,8 +427,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         ),
                                         Flexible(
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
                                                 alignment: Alignment.topCenter,
@@ -446,43 +445,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                           FontWeight.w900),
                                                 ),
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(right: 5),
-                                                        child: CircleAvatar(
-                                                          radius: 15,
-                                                          backgroundImage:
-                                                              AssetImage(
-                                                            user["photo"] ==
-                                                                    false
-                                                                ? "assets/images/defaultpp.jpeg"
-                                                                : "assets/images/defaultpp.jpeg",
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        blogs[i][
-                                                            "blog_author_username"],
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Text(
-                                                    "${blogs[i]["createdAt"].substring(0, 10)}",
-                                                  ),
-                                                ],
-                                              )
+                                              Container(
+                                                alignment: Alignment.topCenter,
+                                                padding: const EdgeInsets.only(
+                                                  left: 20,
+                                                  top: 10,
+                                                ),
+                                                child: Text(
+                                                  "${blogs[i]["blog_text"]}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  maxLines: 4,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w300),
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),

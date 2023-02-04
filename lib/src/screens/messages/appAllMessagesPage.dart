@@ -19,6 +19,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
   FirebaseDatabase database = FirebaseDatabase.instance;
   late SharedPreferences prefs;
   late List users;
+  late List getAllMessageList = [];
   late List messages = [];
   var gettingData = true;
   late var user;
@@ -38,10 +39,9 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
         Map<dynamic, dynamic> invalues = values as Map;
         invalues.forEach((keyy, value) {
           referanceList.add(value);
-          var reversedList = new List.from(referanceList.reversed);
           referanceMap = {
             "sender_id": key.toString(),
-            "messages": reversedList
+            "messages": referanceList
           };
           //print(referanceMap);
         });
@@ -55,7 +55,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
       setState(() {
         gettingData = false;
         messages = getAllMessageList;
-        print(getAllMessageList);
+        //print(getAllMessageList);
       });
     } else {
       setState(() {
@@ -63,17 +63,14 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
         messages = [];
       });
     }
-
-    //print(messages);
   }
 
   @override
   void initState() {
     super.initState();
-    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    //database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
     var res = ref.read(suser);
     user = jsonDecode(res);
-    var token = ref.read(stoken);
     getAllMessage(user["fbuid"]);
   }
 
@@ -96,6 +93,12 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                     ),
                     child: Row(
                       children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back_ios),
+                        ),
                         const Text(
                           "Tüm Sohbetler",
                           style: TextStyle(
@@ -194,20 +197,27 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Container(
+                                                  alignment: Alignment.topLeft,
                                                   child: Text(
                                                     messages[i]["messages"][0]
-                                                            ["toWho"]
-                                                        .toString(),
+                                                                ["toWho"] ==
+                                                            user["username"]
+                                                        ? messages[i]["messages"]
+                                                                    [0][
+                                                                "sender_username"]
+                                                            .toString()
+                                                        : messages[i]
+                                                                ["messages"][0]
+                                                            ["toWho"],
                                                     style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w900,
                                                     ),
                                                   ),
-                                                  alignment: Alignment.topLeft,
                                                 ),
                                                 Text(
-                                                  messages[i]["messages"][0]
-                                                          ["message"]
+                                                  messages[i]["messages"]
+                                                      .last["message"]
                                                       .toString(),
                                                   overflow:
                                                       TextOverflow.ellipsis,

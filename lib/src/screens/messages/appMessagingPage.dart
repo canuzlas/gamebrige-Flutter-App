@@ -28,8 +28,8 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
   var gettingData = true;
   late var user;
   late var messagingPerson;
-  var _controller = TextEditingController();
-  var _scrollController = ScrollController();
+  final _controller = TextEditingController();
+  final _scrollController = ScrollController();
 
   void sendMessageTwo() {
     final DatabaseReference reference1 = FirebaseDatabase.instance
@@ -37,13 +37,12 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
         .child('Messages/${widget.messagingUser["fbuid"]}/${user["fbuid"]}');
     DatabaseReference newPostRef1 = reference1.push();
     newPostRef1.set({
+      "toWho": messagingPerson["username"],
       "message": messagetxt,
       "sender_username": user["username"],
       "sender_name": user["name"],
       "sender_photo": user["photo"],
       "sender_fbuid": user["fbuid"],
-      "toWho": widget.messagingUser["username"],
-      "timestamp": DateTime.now().millisecondsSinceEpoch
     });
   }
 
@@ -54,13 +53,12 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
         .child('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}');
     DatabaseReference newPostRef = reference.push();
     newPostRef.set({
+      "toWho": messagingPerson["username"],
       "message": messagetxt,
       "sender_username": user["username"],
       "sender_name": user["name"],
       "sender_photo": user["photo"],
       "sender_fbuid": user["fbuid"],
-      "toWho": widget.messagingUser["username"],
-      "timestamp": DateTime.now().millisecondsSinceEpoch
     });
 
     messagetxt = "";
@@ -110,13 +108,30 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
               textColor: Colors.white,
               fontSize: 16.0);
         } else {
-          setState(() {
-            gettingData = false;
-            messagingPerson = decodedResponse["user"];
-          });
+          if (mounted) {
+            setState(() {
+              gettingData = false;
+              messagingPerson = decodedResponse["user"];
+            });
+          }
         }
       }
     }
+  }
+
+  createMessageListener() {
+    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    database
+        .ref('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}')
+        .onChildAdded
+        .listen((event) {
+      if (mounted) {
+        setState(() {
+          messagesreferance.add(event.snapshot.value);
+          messages = messagesreferance.reversed.toList();
+        });
+      }
+    });
   }
 
   void initAsyncStorage() async {
@@ -126,23 +141,12 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
   @override
   void initState() {
     super.initState();
-    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
     var res = ref.read(suser);
     user = jsonDecode(res);
     var token = ref.read(stoken);
     initAsyncStorage();
     getMessaginPersonData(token, widget.messagingUser["fbuid"]);
-    //getAllMessage(user["fbuid"], widget.messagingUser["fbuid"]);
-    database
-        .ref('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}')
-        .onChildAdded
-        .listen((event) {
-      setState(() {
-        //messages.add(event.snapshot.value);
-        messagesreferance.add(event.snapshot.value);
-        messages = messagesreferance.reversed.toList();
-      });
-    });
+    createMessageListener();
   }
 
   @override
@@ -153,14 +157,14 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
         child: Stack(
           children: [
             Container(
-              margin: EdgeInsets.only(bottom: 120),
+              margin: const EdgeInsets.only(bottom: 120),
               child: Column(
                 children: [
                   //header
                   SafeArea(
                     child: gettingData
                         ? Center(
-                            child: Container(
+                            child: SizedBox(
                               height: 300,
                               child: LoadingAnimationWidget.staggeredDotsWave(
                                 color: Colors.white,
@@ -169,7 +173,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                             ),
                           )
                         : Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: const BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(color: Colors.white),
@@ -193,18 +197,19 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 20, bottom: 5),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, bottom: 5),
                                   child: Column(
                                     children: [
                                       Text(
                                         messagingPerson["username"].toString(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20),
                                       ),
                                       Text(
                                         messagingPerson["name"].toString(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10),
                                       ),
@@ -218,7 +223,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                   //message box
                   gettingData
                       ? Center(
-                          child: Container(
+                          child: SizedBox(
                             height: 300,
                             child: LoadingAnimationWidget.staggeredDotsWave(
                               color: Colors.white,
@@ -245,23 +250,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                 itemCount: messages.length,
                                 itemBuilder: (context, i) {
                                   return Container(
-                                    margin: const EdgeInsets.only(bottom: 20),
-                                    padding: const EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: const Color.fromRGBO(
-                                          203, 241, 245, 0.8),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color:
-                                              Colors.black12.withOpacity(0.2),
-                                          spreadRadius: 2,
-                                          blurRadius: 7,
-                                          offset: Offset(0,
-                                              3), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
+                                    padding: const EdgeInsets.all(8),
                                     child: messages[i]["sender_fbuid"] ==
                                             user["fbuid"]
                                         ? Row(
@@ -271,16 +260,37 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Flexible(
-                                                child: Text(
-                                                  messages[i]["message"]
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color: const Color.fromRGBO(
+                                                        203, 241, 245, 0.8),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black12
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 2,
+                                                        blurRadius: 7,
+                                                        offset: Offset(0,
+                                                            3), // changes position of shadow
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Text(
+                                                    messages[i]["message"]
+                                                        .toString(),
+                                                    softWrap: true,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
+                                              const Padding(
+                                                padding: EdgeInsets.only(
                                                     right: 0.0, left: 10),
                                                 child: CircleAvatar(
                                                   radius: 20,
@@ -297,8 +307,8 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
+                                              const Padding(
+                                                padding: EdgeInsets.only(
                                                     left: 0.0, right: 10),
                                                 child: CircleAvatar(
                                                   radius: 20,
@@ -308,20 +318,35 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                                 ),
                                               ),
                                               Flexible(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      messages[i]["message"]
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                  ],
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color: const Color.fromRGBO(
+                                                        203, 241, 245, 0.8),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black12
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 2,
+                                                        blurRadius: 7,
+                                                        offset: Offset(0,
+                                                            3), // changes position of shadow
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Text(
+                                                    messages[i]["message"]
+                                                        .toString(),
+                                                    softWrap: true,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                   );
@@ -333,7 +358,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
             ),
             //messagebox
             Container(
-              padding: EdgeInsets.only(left: 10, right: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               alignment: Alignment.bottomCenter,
               child: Form(
                 child: TextFormField(
@@ -350,18 +375,18 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                       icon: const Icon(Icons.send),
                     ),
                     suffixIconColor: Colors.white60,
-                    labelStyle: TextStyle(color: Colors.black),
+                    labelStyle: const TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     labelText: 'Mesajın',
                   ),
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                   onChanged: (txt) {
                     setState(() {
                       messagetxt = txt;

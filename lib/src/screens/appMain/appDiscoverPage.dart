@@ -217,48 +217,66 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                                                     MainAxisAlignment
                                                         .spaceAround,
                                                 children: [
-                                                  GestureDetector(
-                                                    child: Row(
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 5),
-                                                          child: CircleAvatar(
-                                                            radius: 15,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                              blogs[i]["blog_author_photo"] ==
-                                                                      false
-                                                                  ? "assets/images/defaultpp.jpeg"
-                                                                  : "assets/images/defaultpp.jpeg",
+                                                  Flexible(
+                                                    child: GestureDetector(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 8.0),
+                                                        child: Row(
+                                                          children: [
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right: 5),
+                                                              child:
+                                                                  CircleAvatar(
+                                                                radius: 15,
+                                                                backgroundImage:
+                                                                    AssetImage(
+                                                                  blogs[i]["blog_author_photo"] ==
+                                                                          false
+                                                                      ? "assets/images/defaultpp.jpeg"
+                                                                      : "assets/images/defaultpp.jpeg",
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                blogs[i][
+                                                                    "blog_author_username"],
+                                                                softWrap: true,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        Text(
-                                                          blogs[i][
-                                                              "blog_author_username"],
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                      ),
+                                                      onTap: () {
+                                                        blogs[i]["blog_author"] !=
+                                                                user["_id"]
+                                                            ? Navigator
+                                                                .pushNamed(
+                                                                context,
+                                                                "/OtherProfile",
+                                                                arguments: {
+                                                                  "user_id": blogs[
+                                                                          i][
+                                                                      "blog_author"]
+                                                                },
+                                                              )
+                                                            : null;
+                                                      },
                                                     ),
-                                                    onTap: () {
-                                                      blogs[i]["blog_author"] !=
-                                                              user["_id"]
-                                                          ? Navigator.pushNamed(
-                                                              context,
-                                                              "/OtherProfile",
-                                                              arguments: {
-                                                                "user_id": blogs[
-                                                                        i][
-                                                                    "blog_author"]
-                                                              },
-                                                            )
-                                                          : null;
-                                                    },
                                                   ),
                                                   Text(
                                                     "${blogs[i]["createdAt"].substring(0, 10)}",
