@@ -31,21 +31,6 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
 
-  void sendMessageTwo() {
-    final DatabaseReference reference1 = FirebaseDatabase.instance
-        .ref()
-        .child('Messages/${widget.messagingUser["fbuid"]}/${user["fbuid"]}');
-    DatabaseReference newPostRef1 = reference1.push();
-    newPostRef1.set({
-      "toWho": messagingPerson["username"],
-      "message": messagetxt,
-      "sender_username": user["username"],
-      "sender_name": user["name"],
-      "sender_photo": user["photo"],
-      "sender_fbuid": user["fbuid"],
-    });
-  }
-
   sendMessage() async {
     sendMessageTwo();
     final DatabaseReference reference = FirebaseDatabase.instance
@@ -69,6 +54,21 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
             duration: const Duration(milliseconds: 300),
           )
         : null;
+  }
+
+  void sendMessageTwo() {
+    final DatabaseReference reference1 = FirebaseDatabase.instance
+        .ref()
+        .child('Messages/${widget.messagingUser["fbuid"]}/${user["fbuid"]}');
+    DatabaseReference newPostRef1 = reference1.push();
+    newPostRef1.set({
+      "toWho": messagingPerson["username"],
+      "message": messagetxt,
+      "sender_username": user["username"],
+      "sender_name": user["name"],
+      "sender_photo": user["photo"],
+      "sender_fbuid": user["fbuid"],
+    });
   }
 
   getMessaginPersonData(token, fbuid) async {
@@ -132,6 +132,21 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
         });
       }
     });
+  }
+
+  _deleteMessage() async {
+    DatabaseReference ref = FirebaseDatabase.instance
+        .ref('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}');
+    await ref.remove();
+    Fluttertoast.showToast(
+        msg: "Konuşma Silindi.!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.transparent,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    Navigator.pushNamed(context, '/Tab');
   }
 
   void initAsyncStorage() async {
@@ -215,7 +230,37 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                Spacer(),
+                                PopupMenuButton(
+                                    icon: const Icon(Icons.settings_outlined),
+                                    color:
+                                        const Color.fromRGBO(113, 201, 206, 1),
+                                    itemBuilder: (context) {
+                                      return [
+                                        PopupMenuItem(
+                                          onTap: () {
+                                            messages.isNotEmpty
+                                                ? _deleteMessage()
+                                                : Fluttertoast.showToast(
+                                                    msg:
+                                                        "Olmayan Konuşmayı Silemezsin.!",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity: ToastGravity.TOP,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                          },
+                                          child: const Text(
+                                            "Konuşmayı sil",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ];
+                                    })
                               ],
                             ),
                           ),

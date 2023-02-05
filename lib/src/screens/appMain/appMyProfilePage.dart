@@ -190,6 +190,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   onTap: () {},
                 ),
                 ListTile(
+                  title: const Text('Mesajlarım'),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/AllMessages');
+                  },
+                ),
+                ListTile(
                   title: const Text(
                     "Çıkış Yap",
                     style: TextStyle(color: Colors.red),

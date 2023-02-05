@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,6 +41,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
         invalues.forEach((keyy, value) {
           referanceList.add(value);
           referanceMap = {
+            "delete": false,
             "sender_id": key.toString(),
             "messages": referanceList
           };
@@ -63,6 +65,23 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
         messages = [];
       });
     }
+  }
+
+  _deleteMessage(message) async {
+    DatabaseReference ref = FirebaseDatabase.instance
+        .ref("Messages/${user["fbuid"]}/${message["sender_id"]}");
+    await ref.remove();
+    Fluttertoast.showToast(
+        msg: "Konuşma Silindi.!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.transparent,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    setState(() {
+      messages.remove(message);
+    });
   }
 
   @override
@@ -128,13 +147,22 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                         ),
                       )
                     : messages.isEmpty
-                        ? const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Text(
-                                "Hiç Mesajın Yok.",
-                                style: TextStyle(fontSize: 18),
-                              ),
+                        ? Flexible(
+                            child: RefreshIndicator(
+                              onRefresh: () async {
+                                getAllMessage(user["fbuid"]);
+                              },
+                              child: ListView(children: const [
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Text(
+                                      "Hiç Mesajın Yok.",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ),
+                                ),
+                              ]),
                             ),
                           )
                         : Flexible(
@@ -156,9 +184,22 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                         },
                                       );
                                     },
+                                    onHorizontalDragUpdate: (details) {
+                                      // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+                                      int sensitivity = 15;
+                                      if (details.delta.dx < -sensitivity) {
+                                        setState(() {
+                                          messages[i]["delete"] = true;
+                                        });
+                                      } else if (details.delta.dx >
+                                          sensitivity) {
+                                        setState(() {
+                                          messages[i]["delete"] = false;
+                                        });
+                                      }
+                                    },
                                     child: Container(
                                       margin: const EdgeInsets.only(bottom: 20),
-                                      padding: const EdgeInsets.all(15),
                                       height: 90,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
@@ -181,55 +222,79 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          CircleAvatar(
-                                            radius: 45,
-                                            backgroundImage: AssetImage(
-                                              messages[i]["messages"][0]
-                                                          ["sender_photo"] ==
-                                                      false
-                                                  ? "assets/images/defaultpp.jpeg"
-                                                  : "assets/images/defaultpp.jpeg",
+                                          Padding(
+                                            padding: const EdgeInsets.all(15),
+                                            child: CircleAvatar(
+                                              radius: 45,
+                                              backgroundImage: AssetImage(
+                                                messages[i]["messages"][0]
+                                                            ["sender_photo"] ==
+                                                        false
+                                                    ? "assets/images/defaultpp.jpeg"
+                                                    : "assets/images/defaultpp.jpeg",
+                                              ),
                                             ),
                                           ),
                                           Flexible(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  alignment: Alignment.topLeft,
-                                                  child: Text(
-                                                    messages[i]["messages"][0]
-                                                                ["toWho"] ==
-                                                            user["username"]
-                                                        ? messages[i]["messages"]
-                                                                    [0][
-                                                                "sender_username"]
-                                                            .toString()
-                                                        : messages[i]
-                                                                ["messages"][0]
-                                                            ["toWho"],
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w900,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 15),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    alignment:
+                                                        Alignment.topLeft,
+                                                    child: Text(
+                                                      messages[i]["messages"][0]
+                                                                  ["toWho"] ==
+                                                              user["username"]
+                                                          ? messages[i]["messages"]
+                                                                      [0][
+                                                                  "sender_username"]
+                                                              .toString()
+                                                          : messages[i]
+                                                                  ["messages"]
+                                                              [0]["toWho"],
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  messages[i]["messages"]
-                                                      .last["message"]
-                                                      .toString(),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ],
+                                                  Text(
+                                                    messages[i]["messages"]
+                                                        .last["message"]
+                                                        .toString(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    maxLines: 2,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          )
+                                          ),
+                                          messages[i]["delete"] == false
+                                              ? Container()
+                                              : Container(
+                                                  padding: EdgeInsets.zero,
+                                                  height: 90,
+                                                  color: Colors.redAccent,
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      _deleteMessage(
+                                                          messages[i]);
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.delete_outline),
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                         ],
                                       ),
                                     ),
