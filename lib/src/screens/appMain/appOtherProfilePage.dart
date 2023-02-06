@@ -21,6 +21,7 @@ class OtherProfilePage extends ConsumerStatefulWidget {
 class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
   bool gettingData = true;
   late var token;
+  late var user;
   late var person = {};
 
   late SharedPreferences prefs;
@@ -102,11 +103,63 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
     }
   }
 
+  _reportThisPerson() async {
+    var url = "${dotenv.env['API_URL']!}api/report/person";
+    var response = await http.post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'appId': dotenv.env['APP_ID'],
+          'token': token,
+          'reported_id': widget.person_id["user_id"],
+          'reporting_person': user["_id"]
+        }));
+    var decodedResponse = jsonDecode(response.body);
+    if (decodedResponse['appId'] != null) {
+      Navigator.pushNamed(context, '/404');
+    } else {
+      if (decodedResponse['tokenError'] != null) {
+        Fluttertoast.showToast(
+            msg:
+                "Oturum süreniz dolmuştur lütfen uygulamayı yeniden başlatın.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        if (decodedResponse['error'] == true) {
+          Fluttertoast.showToast(
+              msg: "Hata!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Kişi Bildirildi !",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getSharedPreferences();
     token = ref.read(stoken);
+    var res = ref.read(suser);
+    user = jsonDecode(res);
 
     getPersonData(token, widget.person_id["user_id"]);
     getMyBlogs(token, widget.person_id["user_id"]);
@@ -119,11 +172,22 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
           shape: Border(bottom: BorderSide(color: Colors.white, width: 1)),
           elevation: 0.2,
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.error_outline),
-              color: Colors.black,
-            ),
+            PopupMenuButton(
+                icon: const Icon(Icons.error_outline),
+                color: Colors.red,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      onTap: () {
+                        _reportThisPerson();
+                      },
+                      child: const Text(
+                        "Hesabı Şikayet Et",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ];
+                })
           ],
           backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
           automaticallyImplyLeading: false,

@@ -80,6 +80,56 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
     }
   }
 
+  _reportThisBlog() async {
+    var url = "${dotenv.env['API_URL']!}api/report/blog";
+    var response = await http.post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'appId': dotenv.env['APP_ID'],
+          'token': token,
+          'blog_id': widget.blogId["blog_id"],
+          'reporting_person': user["_id"]
+        }));
+    var decodedResponse = jsonDecode(response.body);
+    if (decodedResponse['appId'] != null) {
+      Navigator.pushNamed(context, '/404');
+    } else {
+      if (decodedResponse['tokenError'] != null) {
+        Fluttertoast.showToast(
+            msg:
+                "Oturum süreniz dolmuştur lütfen uygulamayı yeniden başlatın.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        if (decodedResponse['error'] == true) {
+          Fluttertoast.showToast(
+              msg: "Hata!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Blog Bildirildi !",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -139,7 +189,8 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
           Flexible(
             child: Container(
               padding: EdgeInsets.zero,
-              margin: const EdgeInsets.only(bottom: 50, left: 10, right: 10),
+              margin: const EdgeInsets.only(
+                  bottom: 50, left: 10, right: 10, top: 20),
               height: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -217,7 +268,7 @@ class _ReadSelectedBlogPageState extends ConsumerState<ReadSelectedBlogPage> {
                                       return [
                                         PopupMenuItem(
                                           onTap: () {
-                                            print("fnc gelecek");
+                                            _reportThisBlog();
                                           },
                                           child: const Text(
                                             "Bloğu Şikayet Et",
