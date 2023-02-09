@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../appMain/appStartPage.dart';
@@ -18,6 +21,8 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  FirebaseDatabase database1 = FirebaseDatabase.instance;
   bool gettingData = true;
   late SharedPreferences prefs;
   var blogs = [];
@@ -68,6 +73,66 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
   }
 
+  getPermissions() async {
+    var status = await Permission.notification.status;
+    if (status.isDenied || status.isPermanentlyDenied) {
+      await Permission.notification.request();
+      Fluttertoast.showToast(
+          msg: "Lütfen Bildirimleri Etkinleştirin!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  createMessageListenerForNotification() async {
+    var decodedUser = jsonDecode(user);
+
+    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    database1.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+
+    database
+        .ref('Messages/${decodedUser["fbuid"]}')
+        .onChildChanged
+        .listen((event) async {
+      var key = event.snapshot.key;
+      var lastMessage = await database1
+          .ref('Messages/${decodedUser["fbuid"]}/${key}')
+          .limitToLast(1)
+          .get();
+      var res = lastMessage.value as Map;
+      print(res.values.last["sender_fbuid"] == decodedUser["fbuid"]);
+      if (res.values.last["sender_fbuid"] == decodedUser["fbuid"]) {
+        return null;
+      } else {
+        var status = await Permission.notification.status;
+        if (status.isDenied || status.isPermanentlyDenied) {
+          Fluttertoast.showToast(
+              msg:
+                  "Mesaj Bildirimleri İçin Lütfen Bildirimleri Etkinleştirin.!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                  id: 10,
+                  channelKey: 'basic_channel',
+                  title: 'Yeni Bir Mesajın Var',
+                  body:
+                      '${res.values.last["sender_username"]} : ${res.values.last["message"]}',
+                  actionType: ActionType.Default));
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +141,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     //print(user);
     getSharedPreferences();
     getFollowedsBlogs(token, user);
+    getPermissions();
+    createMessageListenerForNotification();
   }
 
   @override
@@ -108,10 +175,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                           Navigator.pushNamed(context, '/BlogShare');
                         },
                         icon: const Icon(Icons.add),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.notifications),
                       ),
                       IconButton(
                         onPressed: () {

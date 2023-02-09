@@ -52,5 +52,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>PermissionGroupNotification</key>
+    <string>Notification</string>
 </dict>
 </plist>

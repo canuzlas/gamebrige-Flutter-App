@@ -23,6 +23,7 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
   late var token;
   late var user;
   late var person = {};
+  late bool isPersonFollowing = false;
 
   late SharedPreferences prefs;
 
@@ -153,6 +154,85 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
     }
   }
 
+  followPerson(token, userid, willfollowid) async {
+    var url = "${dotenv.env['API_URL']!}api/followperson";
+    //apiden blogları alıyoruz
+    var response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        {
+          'appId': dotenv.env['APP_ID'],
+          'token': token,
+          'user_id': userid,
+          'willfollowpersonid': willfollowid,
+        },
+      ),
+    );
+    var decodedResponse = jsonDecode(response.body);
+    //print(decodedResponse);
+    if (decodedResponse['appId'] != null) {
+      Navigator.pushNamed(context, '/404');
+    } else {
+      if (decodedResponse['tokenError'] != null) {
+        Fluttertoast.showToast(
+            msg:
+                "Oturum süreniz dolmuştur lütfen uygulamayı yeniden başlatın.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        if (decodedResponse["error"] == "followed") {
+          Fluttertoast.showToast(
+              msg: "Takipten Çıkıldı",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+
+          suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
+          prefs.setString("user", jsonEncode(decodedResponse["user"]));
+          setState(() {
+            isPersonFollowing = false;
+          });
+        } else {
+          if (decodedResponse["error"] == true) {
+            Fluttertoast.showToast(
+                msg: "Hata Oluştu!",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.TOP,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.transparent,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          } else {
+            //print(jsonEncode(decodedResponse["user"]));
+            suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
+            prefs.setString("user", jsonEncode(decodedResponse["user"]));
+            setState(() {
+              isPersonFollowing = true;
+            });
+            Fluttertoast.showToast(
+                msg: "Takip edildi!",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.TOP,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.transparent,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -163,6 +243,11 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
 
     getPersonData(token, widget.person_id["user_id"]);
     getMyBlogs(token, widget.person_id["user_id"]);
+    setState(() {
+      user["following"].contains(widget.person_id["user_id"])
+          ? isPersonFollowing = true
+          : isPersonFollowing = false;
+    });
   }
 
   @override
@@ -282,6 +367,96 @@ class _OtherProfilePageState extends ConsumerState<OtherProfilePage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
+                      //buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          isPersonFollowing
+                              ? Container(
+                                  alignment: Alignment.bottomCenter,
+                                  margin: EdgeInsets.all(20),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      followPerson(
+                                          token, user["_id"], person["_id"]);
+                                    },
+                                    style: const ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Color.fromRGBO(
+                                                    203, 241, 245, 1)),
+                                        padding: MaterialStatePropertyAll(
+                                            EdgeInsets.all(5.0)),
+                                        elevation:
+                                            MaterialStatePropertyAll(1.0),
+                                        side: MaterialStatePropertyAll(
+                                            BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white))),
+                                    child: const Text(
+                                      "Takipten Çık",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.redAccent),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  alignment: Alignment.bottomCenter,
+                                  margin: EdgeInsets.all(20),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      followPerson(
+                                          token, user["_id"], person["_id"]);
+                                    },
+                                    style: const ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Color.fromRGBO(
+                                                    203, 241, 245, 1)),
+                                        padding: MaterialStatePropertyAll(
+                                            EdgeInsets.all(5.0)),
+                                        elevation:
+                                            MaterialStatePropertyAll(1.0),
+                                        side: MaterialStatePropertyAll(
+                                            BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white))),
+                                    child: const Text(
+                                      "Takip Et",
+                                      style: TextStyle(
+                                          fontSize: 13, color: Colors.black),
+                                    ),
+                                  ),
+                                ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            margin: EdgeInsets.all(20),
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  "/MessagingPage",
+                                  arguments: {"fbuid": person["fbuid"]},
+                                );
+                              },
+                              style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Color.fromRGBO(203, 241, 245, 1)),
+                                  padding: MaterialStatePropertyAll(
+                                      EdgeInsets.all(5.0)),
+                                  elevation: MaterialStatePropertyAll(1.0),
+                                  side: MaterialStatePropertyAll(BorderSide(
+                                      width: 1.0, color: Colors.white))),
+                              child: const Text(
+                                "Mesaj Gönder",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
             Center(

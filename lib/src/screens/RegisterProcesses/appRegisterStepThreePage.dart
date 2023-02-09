@@ -116,7 +116,7 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
               margin: EdgeInsets.only(bottom: 200),
               child: const Center(
                 child: Text(
-                  "Kullanıcı adın ne olsun?",
+                  "Kullanıcı adın ne olsun? ",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
@@ -124,6 +124,7 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
                 ),
               ),
             ),
+
             //input for username
             Container(
               margin: EdgeInsets.only(top: 10),
@@ -143,7 +144,7 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
-                        labelText: 'Kullanıcı adı',
+                        labelText: 'Kullanıcı adı (değiştirilemez)',
                       ),
                       style: TextStyle(color: Colors.white),
                       onChanged: (txt) {

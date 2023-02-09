@@ -247,10 +247,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         icon: const Icon(Icons.add),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.notifications),
-                      ),
-                      IconButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/AllMessages');
                         },
@@ -348,6 +344,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                   ),
                                 ),
                               ),
+                              //follow button
                               Container(
                                 alignment: Alignment.bottomCenter,
                                 child: OutlinedButton(

@@ -187,7 +187,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
                 ListTile(
                   title: const Text('Profili Düzenle'),
-                  onTap: () {},
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        msg: "Çok Yakında Aktif Edilecek!",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.TOP,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.transparent,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },
                 ),
                 ListTile(
                   title: const Text('Mesajlarım'),
@@ -319,7 +328,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         alignment: Alignment.bottomCenter,
                         margin: EdgeInsets.all(20),
                         child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Fluttertoast.showToast(
+                                msg: "Çok Yakında Aktif Edilecek!",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.TOP,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.transparent,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          },
                           style: const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll(
                                   Color.fromRGBO(203, 241, 245, 1)),

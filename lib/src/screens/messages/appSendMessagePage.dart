@@ -104,11 +104,6 @@ class _SendMessagePageState extends ConsumerState<SendMessagePage> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.notifications),
-                        ),
                       ],
                     ),
                   ),

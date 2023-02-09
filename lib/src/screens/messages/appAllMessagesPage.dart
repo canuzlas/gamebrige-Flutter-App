@@ -18,54 +18,14 @@ class AllMessagesPage extends ConsumerStatefulWidget {
 
 class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
   FirebaseDatabase database = FirebaseDatabase.instance;
+  FirebaseDatabase database1 = FirebaseDatabase.instance;
+
   late SharedPreferences prefs;
   late List users;
   late List getAllMessageList = [];
   late List messages = [];
   var gettingData = true;
   late var user;
-
-  getAllMessage(_id) async {
-    late List getAllMessageList = [];
-    final snapshot =
-        await FirebaseDatabase.instance.ref('Messages/${_id}').get();
-
-    if (snapshot.value != null) {
-      Map<dynamic, dynamic> values = snapshot.value as Map;
-      values.forEach((key, values) {
-        late var referanceMap = {};
-        late List referanceList = [];
-        referanceList.clear();
-        referanceMap = {};
-        Map<dynamic, dynamic> invalues = values as Map;
-        invalues.forEach((keyy, value) {
-          referanceList.add(value);
-          referanceMap = {
-            "delete": false,
-            "sender_id": key.toString(),
-            "messages": referanceList
-          };
-          //print(referanceMap);
-        });
-
-        getAllMessageList.add(referanceMap);
-        //print(getAllMessageList);
-        //print(referanceMap);
-      });
-      //print(getAllMessageList);
-      //print(getAllMessageList);
-      setState(() {
-        gettingData = false;
-        messages = getAllMessageList;
-        //print(getAllMessageList);
-      });
-    } else {
-      setState(() {
-        gettingData = false;
-        messages = [];
-      });
-    }
-  }
 
   _deleteMessage(message) async {
     DatabaseReference ref = FirebaseDatabase.instance
@@ -84,13 +44,59 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
     });
   }
 
+  createAllMessagesListener() async {
+    var refMessages = [];
+    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    database1.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    database
+        .ref('Messages/${user["fbuid"]}')
+        .orderByKey()
+        .onValue
+        .listen((event) async {
+      if (event.snapshot.value != null) {
+        messages.clear();
+        var data = event.snapshot.value as Map;
+        data.keys.forEach((element) async {
+          var referanceMap = {};
+          referanceMap = {};
+          var lastMessage = await database1
+              .ref('Messages/${user["fbuid"]}/${element}')
+              .limitToLast(1)
+              .get();
+          var res = lastMessage.value as Map;
+          print(element);
+          referanceMap = {
+            "delete": false,
+            "sender_id": element.toString(),
+            "messages": res.values.last["message"],
+            "sender_username": res.values.last["sender_username"],
+            "sender_photo": res.values.last["sender_photo"],
+            "toWho": res.values.last["toWho"],
+          };
+          refMessages.add(referanceMap);
+          //print(refMessages);
+        });
+        setState(() {
+          messages = refMessages;
+          gettingData = false;
+        });
+      } else {
+        setState(() {
+          gettingData = false;
+          messages = [];
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     //database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
     var res = ref.read(suser);
     user = jsonDecode(res);
-    getAllMessage(user["fbuid"]);
+
+    createAllMessagesListener();
   }
 
   @override
@@ -130,10 +136,6 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                           },
                           icon: const Icon(Icons.send),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.notifications),
-                        ),
                       ],
                     ),
                   ),
@@ -150,7 +152,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                         ? Flexible(
                             child: RefreshIndicator(
                               onRefresh: () async {
-                                getAllMessage(user["fbuid"]);
+                                createAllMessagesListener();
                               },
                               child: ListView(children: const [
                                 Center(
@@ -168,7 +170,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                         : Flexible(
                             child: RefreshIndicator(
                               onRefresh: () async {
-                                getAllMessage(user["fbuid"]);
+                                createAllMessagesListener();
                               },
                               child: ListView.builder(
                                 padding: const EdgeInsets.all(10),
@@ -186,13 +188,15 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                     },
                                     onHorizontalDragUpdate: (details) {
                                       // Note: Sensitivity is integer used when you don't want to mess up vertical drag
-                                      int sensitivity = 15;
-                                      if (details.delta.dx < -sensitivity) {
+                                      int sensitivity = 1;
+                                      if (details.delta.dx < -sensitivity &&
+                                          messages[i]["delete"] == false) {
                                         setState(() {
                                           messages[i]["delete"] = true;
                                         });
                                       } else if (details.delta.dx >
-                                          sensitivity) {
+                                              sensitivity &&
+                                          messages[i]["delete"] == true) {
                                         setState(() {
                                           messages[i]["delete"] = false;
                                         });
@@ -227,8 +231,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                             child: CircleAvatar(
                                               radius: 45,
                                               backgroundImage: AssetImage(
-                                                messages[i]["messages"][0]
-                                                            ["sender_photo"] ==
+                                                messages[i]["sender_photo"] ==
                                                         false
                                                     ? "assets/images/defaultpp.jpeg"
                                                     : "assets/images/defaultpp.jpeg",
@@ -247,16 +250,13 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                                     alignment:
                                                         Alignment.topLeft,
                                                     child: Text(
-                                                      messages[i]["messages"][0]
-                                                                  ["toWho"] ==
+                                                      messages[i]["toWho"] ==
                                                               user["username"]
-                                                          ? messages[i]["messages"]
-                                                                      [0][
+                                                          ? messages[i][
                                                                   "sender_username"]
                                                               .toString()
                                                           : messages[i]
-                                                                  ["messages"]
-                                                              [0]["toWho"],
+                                                              ["toWho"],
                                                       style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w900,
@@ -265,7 +265,6 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                                   ),
                                                   Text(
                                                     messages[i]["messages"]
-                                                        .last["message"]
                                                         .toString(),
                                                     overflow:
                                                         TextOverflow.ellipsis,

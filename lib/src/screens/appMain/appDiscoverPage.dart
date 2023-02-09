@@ -107,10 +107,6 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                         icon: const Icon(Icons.add),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.notifications),
-                      ),
-                      IconButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/AllMessages');
                         },
