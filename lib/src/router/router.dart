@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepOnePage.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepTwoPage.dart';
-import 'package:gamebrige/src/screens/appMain/appBottomBarPage.dart';
 import 'package:gamebrige/src/screens/appMain/appLandingPage.dart';
 import 'package:gamebrige/src/screens/appMain/appLoginPage.dart';
 import 'package:gamebrige/src/screens/appMain/appOtherProfilePage.dart';
 import 'package:gamebrige/src/screens/appMain/appReadSelectedBlogPage.dart';
 import 'package:gamebrige/src/screens/appMain/appShareBlogPage.dart';
-import 'package:gamebrige/src/screens/appMain/appStartPage.dart';
 import 'package:gamebrige/src/screens/appMain/appUpdateBlogPage.dart';
+import 'package:gamebrige/src/screens/appMain/bottomBar/view/appBottomBarPage.dart';
+import 'package:gamebrige/src/screens/appMain/startPage/view/appStartPage.dart';
 import 'package:gamebrige/src/screens/messages/appAllMessagesPage.dart';
 import 'package:gamebrige/src/screens/messages/appMessagingPage.dart';
 import 'package:gamebrige/src/screens/messages/appSendMessagePage.dart';
@@ -22,9 +22,6 @@ class GeneratedRouter {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (context) => const StartPage());
-        return MaterialPageRoute(
-            builder: (context) =>
-                ReadSelectedBlogPage(blogId: {"blog_id": 1231413}));
       case '/Tab':
         return MaterialPageRoute(builder: (context) => const BottomBar());
       case '/Landing':

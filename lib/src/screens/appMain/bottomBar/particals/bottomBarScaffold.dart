@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gamebrige/src/screens/appMain/appDiscoverPage.dart';
-import 'package:gamebrige/src/screens/appMain/appHomePage.dart';
-import 'package:gamebrige/src/screens/appMain/appSearchPage.dart';
+import 'package:gamebrige/src/screens/appMain/bottomBar/controller/bottomBarController.dart';
 
-import '../appMain/appMyProfilePage.dart';
-
-class BottomBar extends StatefulWidget {
-  const BottomBar({Key? key}) : super(key: key);
+class BottomBarScaffold extends StatefulWidget {
+  const BottomBarScaffold({Key? key}) : super(key: key);
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<BottomBarScaffold> createState() => _BottomBarScaffoldState();
 }
 
-class _BottomBarState extends State<BottomBar> {
-  int selectedIndex = 0;
-  late ProfilePage profilePage = const ProfilePage();
-  late DiscoverPage blogsPage = const DiscoverPage();
-  late HomePage homePage = const HomePage();
-  late SearchPage searchPage = const SearchPage();
+class _BottomBarScaffoldState extends State<BottomBarScaffold> {
   late List<Widget> allPages;
+  BottomBarController bottomBarController = BottomBarController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    allPages = [homePage, blogsPage, searchPage, profilePage];
+    allPages = bottomBarController.getBottomBarPages();
   }
 
   @override
@@ -52,14 +43,14 @@ class _BottomBarState extends State<BottomBar> {
         type: BottomNavigationBarType.shifting,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white60,
-        currentIndex: selectedIndex,
+        currentIndex: bottomBarController.selectedIndex,
         onTap: (index) {
           setState(() {
-            selectedIndex = index;
+            bottomBarController.selectedIndex = index;
           });
         },
       ),
-      body: allPages[selectedIndex],
+      body: allPages[bottomBarController.selectedIndex],
     );
   }
 }

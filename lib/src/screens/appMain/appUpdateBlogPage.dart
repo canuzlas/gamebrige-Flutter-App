@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gamebrige/src/sm/sm_with_riverpod.dart';
 import 'package:http/http.dart' as http;
-
-import '../appMain/appStartPage.dart';
 
 class BlogUpdatePage extends ConsumerStatefulWidget {
   late var blog;

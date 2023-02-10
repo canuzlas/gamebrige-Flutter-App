@@ -1,30 +1,22 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gamebrige/src/notification/awesome_notification_init.dart';
 import 'package:gamebrige/src/router/router.dart';
 
 import 'firebase_options.dart';
 
 void main() async {
+  //dot.env initiliaze
   await dotenv.load(fileName: ".env");
+  //flutterfire initialize
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  AwesomeNotifications().initialize(
-      'resource://drawable/logo',
-      [
-        NotificationChannel(
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: Color(0xFF9D50DD),
-            ledColor: Colors.white)
-      ],
-      debug: true);
-
+  //awesome notification initialize
+  initNotification();
+  //ProviderScope => from riverpod for state management
   runApp(const ProviderScope(child: MyApp()));
 }
 
