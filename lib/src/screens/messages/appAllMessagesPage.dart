@@ -17,7 +17,6 @@ class AllMessagesPage extends ConsumerStatefulWidget {
 
 class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
   FirebaseDatabase database = FirebaseDatabase.instance;
-  FirebaseDatabase database1 = FirebaseDatabase.instance;
 
   late SharedPreferences prefs;
   late List users;
@@ -25,6 +24,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
   late List messages = [];
   var gettingData = true;
   late var user;
+  var listener;
 
   _deleteMessage(message) async {
     DatabaseReference ref = FirebaseDatabase.instance
@@ -45,9 +45,9 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
 
   createAllMessagesListener() async {
     var refMessages = [];
-    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
-    database1.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
-    database
+    database.databaseURL =
+        "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
+    listener = database
         .ref('Messages/${user["fbuid"]}')
         .orderByKey()
         .onValue
@@ -58,12 +58,12 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
         data.keys.forEach((element) async {
           var referanceMap = {};
           referanceMap = {};
-          var lastMessage = await database1
+          var lastMessage = await database
               .ref('Messages/${user["fbuid"]}/${element}')
+              .orderByKey()
               .limitToLast(1)
               .get();
           var res = lastMessage.value as Map;
-          print(element);
           referanceMap = {
             "delete": false,
             "sender_id": element.toString(),
@@ -73,11 +73,10 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
             "toWho": res.values.last["toWho"],
           };
           refMessages.add(referanceMap);
-          //print(refMessages);
-        });
-        setState(() {
-          messages = refMessages;
-          gettingData = false;
+          setState(() {
+            messages = refMessages;
+            gettingData = false;
+          });
         });
       } else {
         setState(() {
@@ -91,11 +90,17 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
   @override
   void initState() {
     super.initState();
-    //database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
     var res = ref.read(suser);
     user = jsonDecode(res);
-
     createAllMessagesListener();
+  }
+
+  @override
+  void dispose() {
+    messages = [];
+    gettingData = true;
+    listener?.cancel();
+    super.dispose();
   }
 
   @override
@@ -149,156 +154,142 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                       )
                     : messages.isEmpty
                         ? Flexible(
-                            child: RefreshIndicator(
-                              onRefresh: () async {
-                                createAllMessagesListener();
-                              },
-                              child: ListView(children: const [
-                                Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(20.0),
-                                    child: Text(
-                                      "Hiç Mesajın Yok.",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
+                            child: ListView(children: const [
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: Text(
+                                    "Hiç Mesajın Yok.",
+                                    style: TextStyle(fontSize: 18),
                                   ),
                                 ),
-                              ]),
-                            ),
+                              ),
+                            ]),
                           )
                         : Flexible(
-                            child: RefreshIndicator(
-                              onRefresh: () async {
-                                createAllMessagesListener();
-                              },
-                              child: ListView.builder(
-                                padding: const EdgeInsets.all(10),
-                                itemCount: messages.length,
-                                itemBuilder: (context, i) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        "/MessagingPage",
-                                        arguments: {
-                                          "fbuid": messages[i]["sender_id"]
-                                        },
-                                      );
-                                    },
-                                    onHorizontalDragUpdate: (details) {
-                                      // Note: Sensitivity is integer used when you don't want to mess up vertical drag
-                                      int sensitivity = 1;
-                                      if (details.delta.dx < -sensitivity &&
-                                          messages[i]["delete"] == false) {
-                                        setState(() {
-                                          messages[i]["delete"] = true;
-                                        });
-                                      } else if (details.delta.dx >
-                                              sensitivity &&
-                                          messages[i]["delete"] == true) {
-                                        setState(() {
-                                          messages[i]["delete"] = false;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(bottom: 20),
-                                      height: 90,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: const Color.fromRGBO(
-                                            203, 241, 245, 0.8),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black12.withOpacity(0.2),
-                                            spreadRadius: 2,
-                                            blurRadius: 7,
-                                            offset: Offset(0,
-                                                3), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(15),
-                                            child: CircleAvatar(
-                                              radius: 45,
-                                              backgroundImage: AssetImage(
-                                                messages[i]["sender_photo"] ==
-                                                        false
-                                                    ? "assets/images/defaultpp.jpeg"
-                                                    : "assets/images/defaultpp.jpeg",
-                                              ),
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(10),
+                              itemCount: messages.length,
+                              itemBuilder: (context, i) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/MessagingPage",
+                                      arguments: {
+                                        "fbuid": messages[i]["sender_id"]
+                                      },
+                                    );
+                                  },
+                                  onHorizontalDragUpdate: (details) {
+                                    // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+                                    int sensitivity = 1;
+                                    if (details.delta.dx < -sensitivity &&
+                                        messages[i]["delete"] == false) {
+                                      setState(() {
+                                        messages[i]["delete"] = true;
+                                      });
+                                    } else if (details.delta.dx > sensitivity &&
+                                        messages[i]["delete"] == true) {
+                                      setState(() {
+                                        messages[i]["delete"] = false;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: const Color.fromRGBO(
+                                          203, 241, 245, 0.8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              Colors.black12.withOpacity(0.2),
+                                          spreadRadius: 2,
+                                          blurRadius: 7,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(15),
+                                          child: CircleAvatar(
+                                            radius: 45,
+                                            backgroundImage: AssetImage(
+                                              messages[i]["sender_photo"] ==
+                                                      false
+                                                  ? "assets/images/defaultpp.jpeg"
+                                                  : "assets/images/defaultpp.jpeg",
                                             ),
                                           ),
-                                          Flexible(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 15),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    alignment:
-                                                        Alignment.topLeft,
-                                                    child: Text(
-                                                      messages[i]["toWho"] ==
-                                                              user["username"]
-                                                          ? messages[i][
-                                                                  "sender_username"]
-                                                              .toString()
-                                                          : messages[i]
-                                                              ["toWho"],
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                      ),
+                                        ),
+                                        Flexible(
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 15),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Text(
+                                                    messages[i]["toWho"] ==
+                                                            user["username"]
+                                                        ? messages[i][
+                                                                "sender_username"]
+                                                            .toString()
+                                                        : messages[i]["toWho"],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w900,
                                                     ),
                                                   ),
-                                                  Text(
-                                                    messages[i]["messages"]
-                                                        .toString(),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    softWrap: true,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                ],
-                                              ),
+                                                ),
+                                                Text(
+                                                  messages[i]["messages"]
+                                                      .toString(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          messages[i]["delete"] == false
-                                              ? Container()
-                                              : Container(
-                                                  padding: EdgeInsets.zero,
-                                                  height: 90,
-                                                  color: Colors.redAccent,
-                                                  child: IconButton(
-                                                    onPressed: () {
-                                                      _deleteMessage(
-                                                          messages[i]);
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.delete_outline),
-                                                    color: Colors.white,
-                                                  ),
+                                        ),
+                                        messages[i]["delete"] == false
+                                            ? Container()
+                                            : Container(
+                                                padding: EdgeInsets.zero,
+                                                height: 90,
+                                                color: Colors.redAccent,
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    _deleteMessage(messages[i]);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.delete_outline),
+                                                  color: Colors.white,
                                                 ),
-                                        ],
-                                      ),
+                                              ),
+                                      ],
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           )
               ],

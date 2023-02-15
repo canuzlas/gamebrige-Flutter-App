@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:747520515560:ios:55dd54a60c98ddbe08185d",
-  "FIREBASE_PROJECT_ID": "gamebrige",
-  "GCM_SENDER_ID": "747520515560"
+  "GOOGLE_APP_ID": "1:29930325525:ios:150838dd3f103015c9301c",
+  "FIREBASE_PROJECT_ID": "com-uzlas-gamebrige",
+  "GCM_SENDER_ID": "29930325525"
 }

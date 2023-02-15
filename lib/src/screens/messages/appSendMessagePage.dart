@@ -65,7 +65,8 @@ class _SendMessagePageState extends ConsumerState<SendMessagePage> {
   @override
   void initState() {
     super.initState();
-    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    database.databaseURL =
+        "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
     var res = ref.read(suser);
     token = ref.read(stoken);
     user = jsonDecode(res);

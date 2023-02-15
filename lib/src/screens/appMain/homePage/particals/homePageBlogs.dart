@@ -21,8 +21,7 @@ class _HomePageBlogsState extends State<HomePageBlogs> {
     return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
-          homePageController.getFollowedsBlogs(
-              context, widget.token, widget.user);
+          homePageController.getFollowedsBlogs(widget.token, widget.user);
         },
         child: ListView.builder(
           padding: const EdgeInsets.all(10),

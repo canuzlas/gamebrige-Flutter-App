@@ -1,84 +1,57 @@
 {
   "project_info": {
-    "project_number": "747520515560",
-    "project_id": "gamebrige",
-    "storage_bucket": "gamebrige.appspot.com"
+    "project_number": "29930325525",
+    "firebase_url": "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com",
+    "project_id": "com-uzlas-gamebrige",
+    "storage_bucket": "com-uzlas-gamebrige.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:747520515560:android:ee8ab895731a5bcb08185d",
+        "mobilesdk_app_id": "1:29930325525:android:26cab4f2bc90bd92c9301c",
         "android_client_info": {
-          "package_name": "com.example.gamebrige"
+          "package_name": "com.uzlas.gamebrige"
         }
       },
       "oauth_client": [
         {
-          "client_id": "747520515560-u9ud56e9i29gfccjrj2vuhe9sm8sc79h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBr5bCOKkkGrluy9rtC00SUSyZPXvwnoSM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "747520515560-opimj1l63dv9m9gtvo2451qvr9mdbdd2.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "747520515560-s1qi1gomj2s1v5gbb34kk27suegegjh5.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.uzlasstudio.gamebrige"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:747520515560:android:c1f426cd5988410408185d",
-        "android_client_info": {
-          "package_name": "com.uzlasstudio.gamebrige"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "747520515560-a01i70qgr3d9j3hpbi2249lnki35e4br.apps.googleusercontent.com",
+          "client_id": "29930325525-1adtm7i3mnp8p9vf2vocbqpdnfntinlo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.uzlasstudio.gamebrige",
-            "certificate_hash": "b11bc0145e1ffca135defefa8d9bddef817358e4"
+            "package_name": "com.uzlas.gamebrige",
+            "certificate_hash": "648e71bad896ad5b1592535da7a7fc166991c787"
           }
         },
         {
-          "client_id": "747520515560-u9ud56e9i29gfccjrj2vuhe9sm8sc79h.apps.googleusercontent.com",
+          "client_id": "29930325525-s22j99e0por3argjs26o02nd4abqs6jm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uzlas.gamebrige",
+            "certificate_hash": "7d113214c07dfeb494ac915f9c698ee5594d2b98"
+          }
+        },
+        {
+          "client_id": "29930325525-9p3fhormm6de57auj0hr1b5d2r65o0pu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBr5bCOKkkGrluy9rtC00SUSyZPXvwnoSM"
+          "current_key": "AIzaSyDJX9Gh_blBL-wzOcIrm-DQvbJMJCTR5r4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "747520515560-opimj1l63dv9m9gtvo2451qvr9mdbdd2.apps.googleusercontent.com",
+              "client_id": "29930325525-4vag3u6s9bpe2t9dn48he954pek1cjrp.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "747520515560-s1qi1gomj2s1v5gbb34kk27suegegjh5.apps.googleusercontent.com",
+              "client_id": "29930325525-junf7v97u63ko8bcs3k99l6jlb2rdsde.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.uzlasstudio.gamebrige"
+                "bundle_id": "com.example.gamebrige"
               }
             }
           ]

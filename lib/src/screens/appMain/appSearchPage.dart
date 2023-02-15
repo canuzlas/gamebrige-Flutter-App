@@ -30,7 +30,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   getSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
-    //print(prefs.getString("user"));
   }
 
   searchUser(token, userid, txt) async {

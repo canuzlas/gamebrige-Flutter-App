@@ -44,42 +44,42 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBm9HTu0z_9UhV8FrnQXOtcZFH9e0THNdI',
-    appId: '1:747520515560:web:cb29ce1d382f68d008185d',
-    messagingSenderId: '747520515560',
-    projectId: 'gamebrige',
-    authDomain: 'gamebrige.firebaseapp.com',
-    storageBucket: 'gamebrige.appspot.com',
-    measurementId: 'G-2YNM1TG1KW',
+    apiKey: 'AIzaSyCmv5TSxUSpyp8jpMErxKawn1EEc9aljdM',
+    appId: '1:29930325525:web:33403bd2dac0f045c9301c',
+    messagingSenderId: '29930325525',
+    projectId: 'com-uzlas-gamebrige',
+    authDomain: 'com-uzlas-gamebrige.firebaseapp.com',
+    storageBucket: 'com-uzlas-gamebrige.appspot.com',
+    measurementId: 'G-P6GPQ9EL99',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBr5bCOKkkGrluy9rtC00SUSyZPXvwnoSM',
-    appId: '1:747520515560:android:ee8ab895731a5bcb08185d',
-    messagingSenderId: '747520515560',
-    projectId: 'gamebrige',
-    storageBucket: 'gamebrige.appspot.com',
+    apiKey: 'AIzaSyDJX9Gh_blBL-wzOcIrm-DQvbJMJCTR5r4',
+    appId: '1:29930325525:android:26cab4f2bc90bd92c9301c',
+    messagingSenderId: '29930325525',
+    projectId: 'com-uzlas-gamebrige',
+    storageBucket: 'com-uzlas-gamebrige.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDpAx2dW2e3w8MYyrkJfAzfWaK15uvl2Tg',
-    appId: '1:747520515560:ios:55dd54a60c98ddbe08185d',
-    messagingSenderId: '747520515560',
-    projectId: 'gamebrige',
-    storageBucket: 'gamebrige.appspot.com',
-    androidClientId: '747520515560-a01i70qgr3d9j3hpbi2249lnki35e4br.apps.googleusercontent.com',
-    iosClientId: '747520515560-5pp66cnovp61hqgnl0nq6fe4v79278aj.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBU9gzbbd_dFNpH-nfMlbCKUDvoQBfheOw',
+    appId: '1:29930325525:ios:150838dd3f103015c9301c',
+    messagingSenderId: '29930325525',
+    projectId: 'com-uzlas-gamebrige',
+    storageBucket: 'com-uzlas-gamebrige.appspot.com',
+    androidClientId: '29930325525-md5r8q50ut0drnv4hcth2n8fghe35knr.apps.googleusercontent.com',
+    iosClientId: '29930325525-junf7v97u63ko8bcs3k99l6jlb2rdsde.apps.googleusercontent.com',
     iosBundleId: 'com.example.gamebrige',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDpAx2dW2e3w8MYyrkJfAzfWaK15uvl2Tg',
-    appId: '1:747520515560:ios:55dd54a60c98ddbe08185d',
-    messagingSenderId: '747520515560',
-    projectId: 'gamebrige',
-    storageBucket: 'gamebrige.appspot.com',
-    androidClientId: '747520515560-a01i70qgr3d9j3hpbi2249lnki35e4br.apps.googleusercontent.com',
-    iosClientId: '747520515560-5pp66cnovp61hqgnl0nq6fe4v79278aj.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBU9gzbbd_dFNpH-nfMlbCKUDvoQBfheOw',
+    appId: '1:29930325525:ios:150838dd3f103015c9301c',
+    messagingSenderId: '29930325525',
+    projectId: 'com-uzlas-gamebrige',
+    storageBucket: 'com-uzlas-gamebrige.appspot.com',
+    androidClientId: '29930325525-md5r8q50ut0drnv4hcth2n8fghe35knr.apps.googleusercontent.com',
+    iosClientId: '29930325525-junf7v97u63ko8bcs3k99l6jlb2rdsde.apps.googleusercontent.com',
     iosBundleId: 'com.example.gamebrige',
   );
 }

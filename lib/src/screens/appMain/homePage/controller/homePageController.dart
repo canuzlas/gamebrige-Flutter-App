@@ -21,7 +21,7 @@ class HomePageController {
     return prefs;
   }
 
-  Future<List?> getFollowedsBlogs(context, token, user) async {
+  getFollowedsBlogs(token, user) async {
     var url = "${dotenv.env['API_URL']!}api/getfollowedsblogs";
     //apiden blogları alıyoruz
     var response = await http.post(Uri.parse(url),
@@ -35,7 +35,7 @@ class HomePageController {
         }));
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
-      Navigator.pushNamed(context, '/404');
+      return {"error": true};
     } else {
       if (decodedResponse['tokenError'] != null) {
         Fluttertoast.showToast(
@@ -73,8 +73,10 @@ class HomePageController {
   createMessageListenerForNotification(user) async {
     var decodedUser = jsonDecode(user);
 
-    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
-    database1.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
+    database.databaseURL =
+        "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
+    database1.databaseURL =
+        "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
 
     database
         .ref('Messages/${decodedUser["fbuid"]}')

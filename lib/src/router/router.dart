@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepOnePage.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepTwoPage.dart';
-import 'package:gamebrige/src/screens/appMain/appLandingPage.dart';
-import 'package:gamebrige/src/screens/appMain/appLoginPage.dart';
 import 'package:gamebrige/src/screens/appMain/appOtherProfilePage.dart';
-import 'package:gamebrige/src/screens/appMain/appReadSelectedBlogPage.dart';
-import 'package:gamebrige/src/screens/appMain/appShareBlogPage.dart';
 import 'package:gamebrige/src/screens/appMain/appUpdateBlogPage.dart';
 import 'package:gamebrige/src/screens/appMain/bottomBar/view/appBottomBarPage.dart';
+import 'package:gamebrige/src/screens/appMain/landingPage/view/appLandingPage.dart';
+import 'package:gamebrige/src/screens/appMain/loginPage/view/appLoginPage.dart';
+import 'package:gamebrige/src/screens/appMain/readSelectedBlogPage/view/appReadSelectedBlogPage.dart';
+import 'package:gamebrige/src/screens/appMain/shareBlogPage/view/appShareBlogPage.dart';
 import 'package:gamebrige/src/screens/appMain/startPage/view/appStartPage.dart';
 import 'package:gamebrige/src/screens/messages/appAllMessagesPage.dart';
 import 'package:gamebrige/src/screens/messages/appMessagingPage.dart';

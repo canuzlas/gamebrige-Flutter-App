@@ -27,6 +27,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
   var gettingData = true;
   late var user;
   late var messagingPerson;
+  late var listener;
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
 
@@ -118,21 +119,6 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
     }
   }
 
-  createMessageListener() {
-    database.databaseURL = "https://gamebrige-default-rtdb.firebaseio.com";
-    database
-        .ref('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}')
-        .onChildAdded
-        .listen((event) {
-      if (mounted) {
-        setState(() {
-          messagesreferance.add(event.snapshot.value);
-          messages = messagesreferance.reversed.toList();
-        });
-      }
-    });
-  }
-
   _deleteMessage() async {
     DatabaseReference ref = FirebaseDatabase.instance
         .ref('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}');
@@ -148,6 +134,22 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
     Navigator.pushNamed(context, '/Tab');
   }
 
+  createMessageListener() {
+    database.databaseURL =
+        "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
+    listener = database
+        .ref('Messages/${user["fbuid"]}/${widget.messagingUser["fbuid"]}')
+        .onChildAdded
+        .listen((event) {
+      if (mounted) {
+        setState(() {
+          messagesreferance.add(event.snapshot.value);
+          messages = messagesreferance.reversed.toList();
+        });
+      }
+    });
+  }
+
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
   }
@@ -161,6 +163,12 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
     initAsyncStorage();
     getMessaginPersonData(token, widget.messagingUser["fbuid"]);
     createMessageListener();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    listener.cancel();
   }
 
   @override
@@ -210,24 +218,36 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                         : "assets/images/defaultpp.jpeg",
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, bottom: 5),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        messagingPerson["username"].toString(),
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                      Text(
-                                        messagingPerson["name"].toString(),
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 10),
-                                      ),
-                                    ],
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/OtherProfile",
+                                      arguments: {
+                                        "user_id": messagingPerson["_id"]
+                                      },
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, bottom: 5),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          messagingPerson["username"]
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        Text(
+                                          messagingPerson["name"].toString(),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Spacer(),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../appMyProfilePage.dart';
 import '../../appSearchPage.dart';
 import '../../discoverPage/view/appDiscoverPage.dart';
 import '../../homePage/view/appHomePage.dart';
+import '../../myProfilePage/view/appMyProfilePage.dart';
 
 class BottomBarController {
   int selectedIndex = 0;

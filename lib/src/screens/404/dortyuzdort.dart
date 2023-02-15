@@ -19,7 +19,7 @@ class DortyuzdortPagexd extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             margin: EdgeInsets.only(bottom: 100),
             padding: EdgeInsets.only(left: 20, right: 20),
-            child: Text(
+            child: const Text(
               "İnternetini kontrol et, eğer internetinde sorun yoksa lütfen uygulamayı tekrar başlat.",
               style: TextStyle(
                   fontWeight: FontWeight.bold,

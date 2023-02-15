@@ -8,14 +8,19 @@ import 'package:gamebrige/src/router/router.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   //dot.env initiliaze
   await dotenv.load(fileName: ".env");
   //flutterfire initialize
   await Firebase.initializeApp(
+    name: "com-uzlas-gamebrige",
     options: DefaultFirebaseOptions.currentPlatform,
   );
   //awesome notification initialize
   initNotification();
+  //background service
+  //await initializeBackgroundService();
   //ProviderScope => from riverpod for state management
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -26,6 +31,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowMaterialGrid: false,
+      showSemanticsDebugger: false,
       onGenerateRoute: GeneratedRouter.router,
       initialRoute: "/",
     );
