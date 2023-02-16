@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gamebrige/src/screens/appMain/homePage/controller/homePageController.dart';
 import 'package:gamebrige/src/screens/appMain/homePage/particals/homePageScaffold.dart';
-import 'package:gamebrige/src/sm/homePage_rp.dart';
+import 'package:gamebrige/src/screens/appMain/homePage/state/home_page_state.dart';
 
 import '../particals/homePageLoadingScaffold.dart';
 

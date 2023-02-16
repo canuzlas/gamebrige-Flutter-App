@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../../googleSignIn.dart';
 import '../controller/loginPageController.dart';
 
 class LoginPageScaffold extends StatefulWidget {
@@ -18,8 +19,46 @@ class _LoginPageScaffoldState extends State<LoginPageScaffold> {
   String pass = "";
 
   _googleSignIn() async {
-    var res = await signInWithGoogle();
-    res != false ? print("giriş işlemleri gelecek") : null;
+    var res = await loginPageController.signInWithGoogle();
+    if (res != false) {
+      var user = {
+        "username": res.displayName,
+        "email": res.email,
+        "fbuid": FirebaseAuth.instance.currentUser?.uid
+      };
+      var data =
+          await loginPageController.loginOrRegisterWithGoogle(context, user);
+      if (data["login"]) {
+        Fluttertoast.showToast(
+            msg: "Giriş Yapıldı.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.pushNamed(context, '/Tab');
+      } else {
+        Fluttertoast.showToast(
+            msg: "Kayıt Yapıldı.!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.pushNamed(context, '/Tab');
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Giriş iptal edildi.!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   @override
@@ -119,15 +158,29 @@ class _LoginPageScaffoldState extends State<LoginPageScaffold> {
             ),
           ),
           Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 200),
-            height: 40,
-            child: SignInButton(
-              Buttons.Google,
-              text: "Google ile giriş yap",
-              onPressed: () {
-                _googleSignIn();
-              },
+            alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.only(bottom: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _googleSignIn();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 200),
+                    height: 40,
+                    child: SignInButton(
+                      Buttons.Google,
+                      text: "Google ile giriş yap",
+                      onPressed: () {
+                        _googleSignIn();
+                      },
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
           Container(

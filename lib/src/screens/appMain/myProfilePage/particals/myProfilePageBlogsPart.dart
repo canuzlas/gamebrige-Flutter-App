@@ -22,10 +22,12 @@ class _MyProfilePageBlogsPartState extends State<MyProfilePageBlogsPart> {
   getFutureData(context) async {
     var refBlogs = await myProfilePageController.getMyBlogs(
         context, widget.token, widget.user["_id"]);
-    setState(() {
-      blogs = refBlogs;
-      gettingData = false;
-    });
+    if (mounted) {
+      setState(() {
+        blogs = refBlogs;
+        gettingData = false;
+      });
+    }
   }
 
   @override
