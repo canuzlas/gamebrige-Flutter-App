@@ -53,7 +53,8 @@ class ShareBlogController {
               backgroundColor: Colors.transparent,
               textColor: Colors.white,
               fontSize: 16.0);
-          Navigator.pushNamed(context, "/Tab");
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/Tab', (Route<dynamic> route) => false);
         }
       }
     }

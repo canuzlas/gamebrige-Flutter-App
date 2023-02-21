@@ -21,9 +21,9 @@ class SearchPageController {
     return prefs;
   }
 
-  searchUser(context, token, userid, txt) async {
+  searchUser(token, user, txt) async {
+    var refuser = jsonDecode(user);
     var url = "${dotenv.env['API_URL']!}api/searchperson";
-    //apiden blogları alıyoruz
     var response = await http.post(
       Uri.parse(url),
       headers: {
@@ -33,14 +33,22 @@ class SearchPageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
-          'userid': userid,
+          'userid': refuser["_id"],
           "word": txt
         },
       ),
     );
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
-      Navigator.pushNamed(context, '/404');
+      Fluttertoast.showToast(
+          msg: "Uygulamayı yeniden başlatın.!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return [];
     } else {
       if (decodedResponse['tokenError'] != null) {
         Fluttertoast.showToast(
@@ -52,6 +60,7 @@ class SearchPageController {
             backgroundColor: Colors.transparent,
             textColor: Colors.white,
             fontSize: 16.0);
+        return [];
       } else {
         if (decodedResponse["error"] == true) {
           Fluttertoast.showToast(
@@ -62,15 +71,16 @@ class SearchPageController {
               backgroundColor: Colors.transparent,
               textColor: Colors.white,
               fontSize: 16.0);
+          return [];
         } else {
-          users = decodedResponse['users'];
+          users = decodedResponse['searchedUsers'];
           return users;
         }
       }
     }
   }
 
-  getBestUsers(context, token, userid) async {
+  getBestUsers(token, user) async {
     var url = "${dotenv.env['API_URL']!}api/getbestusers";
     //apiden blogları alıyoruz
     var response = await http.post(
@@ -82,14 +92,22 @@ class SearchPageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
-          'userid': userid,
+          'user': user,
         },
       ),
     );
     var decodedResponse = jsonDecode(response.body);
     //print(decodedResponse);
     if (decodedResponse['appId'] != null) {
-      Navigator.pushNamed(context, '/404');
+      Fluttertoast.showToast(
+          msg: "Uygulamayı yeniden başlatın.!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return [];
     } else {
       if (decodedResponse['tokenError'] != null) {
         Fluttertoast.showToast(
@@ -101,6 +119,7 @@ class SearchPageController {
             backgroundColor: Colors.transparent,
             textColor: Colors.white,
             fontSize: 16.0);
+        return [];
       } else {
         if (decodedResponse["error"] == true) {
           Fluttertoast.showToast(
@@ -111,6 +130,7 @@ class SearchPageController {
               backgroundColor: Colors.transparent,
               textColor: Colors.white,
               fontSize: 16.0);
+          return [];
         } else {
           bestusers = decodedResponse['users'];
           return bestusers;
@@ -119,7 +139,8 @@ class SearchPageController {
     }
   }
 
-  followPerson(context, token, userid, willfollowid) async {
+  followPerson(context, token, user, willfollowid) async {
+    await getSharedPreferences();
     var url = "${dotenv.env['API_URL']!}api/followperson";
     //apiden blogları alıyoruz
     var response = await http.post(
@@ -131,13 +152,13 @@ class SearchPageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
-          'user_id': userid,
+          'user': user,
           'willfollowpersonid': willfollowid,
         },
       ),
     );
     var decodedResponse = jsonDecode(response.body);
-    //print(decodedResponse);
+    print(decodedResponse);
     if (decodedResponse['appId'] != null) {
       Navigator.pushNamed(context, '/404');
     } else {

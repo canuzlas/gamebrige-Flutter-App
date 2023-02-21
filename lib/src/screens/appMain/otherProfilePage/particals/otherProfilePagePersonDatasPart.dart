@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,8 +136,11 @@ class _OtherProfilePagePersonDatasPartState
                               otherProfilePageController.followPerson(
                                   context,
                                   widget.token,
-                                  widget.user["_id"],
+                                  jsonEncode(widget.user),
                                   person["_id"]);
+                              setState(() {
+                                isPersonFollowing = false;
+                              });
                             },
                             style: const ButtonStyle(
                                 backgroundColor: MaterialStatePropertyAll(
@@ -160,8 +165,11 @@ class _OtherProfilePagePersonDatasPartState
                               otherProfilePageController.followPerson(
                                   context,
                                   widget.token,
-                                  widget.user["_id"],
+                                  jsonEncode(widget.user),
                                   person["_id"]);
+                              setState(() {
+                                isPersonFollowing = true;
+                              });
                             },
                             style: const ButtonStyle(
                                 backgroundColor: MaterialStatePropertyAll(

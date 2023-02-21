@@ -16,7 +16,7 @@ class MyProfilePageController {
     return prefs;
   }
 
-  getMyBlogs(context, token, userid) async {
+  getMyBlogs(token, user) async {
     var url = "${dotenv.env['API_URL']!}api/getmyblogs";
     //apiden blogları alıyoruz
     var response = await http.post(Uri.parse(url),
@@ -26,11 +26,19 @@ class MyProfilePageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
-          '_id': userid,
+          '_id': user["_id"],
         }));
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
-      Navigator.pushNamed(context, '/404');
+      Fluttertoast.showToast(
+          msg: "Uygulamayı yeniden başlatın.!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return [];
     } else {
       if (decodedResponse['tokenError'] != null) {
         Fluttertoast.showToast(
@@ -42,6 +50,7 @@ class MyProfilePageController {
             backgroundColor: Colors.transparent,
             textColor: Colors.white,
             fontSize: 16.0);
+        return [];
       } else {
         blogs = decodedResponse['blogs'];
         return blogs;
@@ -101,9 +110,5 @@ class MyProfilePageController {
         }
       }
     }
-  }
-
-  updateBlog(context, i) {
-    Navigator.pushNamed(context, '/UpdateBlog', arguments: blogs[i]);
   }
 }

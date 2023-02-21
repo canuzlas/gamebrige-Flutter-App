@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyProfilePageDrawerMenu extends StatefulWidget {
@@ -13,7 +14,7 @@ class MyProfilePageDrawerMenu extends StatefulWidget {
 }
 
 class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
-  late var prefs;
+  late SharedPreferences prefs;
   getSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
   }
@@ -89,10 +90,12 @@ class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
               style: TextStyle(color: Colors.red),
             ),
             onTap: () async {
-              prefs.remove("user");
-              prefs.remove("fbuser");
+              await prefs.remove("user");
+              await prefs.remove("fbuser");
               await FirebaseAuth.instance.signOut();
-              Navigator.pushNamed(context, "/Landing");
+              await GoogleSignIn().signOut();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/Landing', (Route<dynamic> route) => false);
             },
           ),
         ],

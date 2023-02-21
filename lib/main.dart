@@ -21,6 +21,8 @@ void main() async {
   initNotification();
   //background service
   //await initializeBackgroundService();
+  //adsense
+  //MobileAds.instance.initialize();
   //ProviderScope => from riverpod for state management
   runApp(const ProviderScope(child: MyApp()));
 }

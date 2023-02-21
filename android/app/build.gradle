@@ -67,7 +67,7 @@ android {
     //yorruma al
 
     signingConfigs {
-        debug {
+        release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
@@ -81,6 +81,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             //debug yap release
+            crunchPngs false
             signingConfig signingConfigs.debug
         }
     }

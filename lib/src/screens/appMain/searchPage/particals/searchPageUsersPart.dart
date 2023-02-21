@@ -1,81 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controller/searchPageController.dart';
+import '../state/search_page_state.dart';
 
-class SearchPageSearchAndUsersPart extends StatefulWidget {
+class SearchPageUsersPart extends ConsumerStatefulWidget {
   final token;
   final user;
-  const SearchPageSearchAndUsersPart({
+  final users;
+
+  const SearchPageUsersPart({
     Key? key,
+    this.users,
     this.token,
     this.user,
   }) : super(key: key);
 
   @override
-  State<SearchPageSearchAndUsersPart> createState() =>
-      _SearchPageSearchAndUsersPartState();
+  ConsumerState<SearchPageUsersPart> createState() =>
+      _SearchPageUsersPartState();
 }
 
-class _SearchPageSearchAndUsersPartState
-    extends State<SearchPageSearchAndUsersPart> {
-  var users = [];
-  SearchPageController searchPageController = SearchPageController();
-
+class _SearchPageUsersPartState extends ConsumerState<SearchPageUsersPart> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
         children: [
-          //search
-          Container(
-            margin: EdgeInsets.only(top: 0),
-            width: 300,
-            //margin: const EdgeInsets.only(top: 120),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.black),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      labelText: 'Bir kullanıcı ara',
-                    ),
-                    style: TextStyle(color: Colors.black),
-                    onChanged: (txt) async {
-                      var refUsers;
-                      txt.isEmpty
-                          ? refUsers = []
-                          : refUsers = await searchPageController.searchUser(
-                              context, widget.token, widget.user["_id"], txt);
-                      setState(() {
-                        users = refUsers;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
           //users
           Flexible(
             child: Container(
               width: 300,
               child: ListView.builder(
                 padding: const EdgeInsets.all(10),
-                itemCount: users.length,
+                itemCount: widget.users.length,
                 itemBuilder: (context, i) {
                   return GestureDetector(
                     onTap: () {
+                      print(widget.users[i]["_id"]);
                       Navigator.pushNamed(context, "/OtherProfile",
-                          arguments: {"user_id": users[i]["_id"]});
+                          arguments: {"user_id": widget.users[i]["_id"]});
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 10),
@@ -100,7 +63,7 @@ class _SearchPageSearchAndUsersPartState
                             child: CircleAvatar(
                               radius: 25,
                               backgroundImage: AssetImage(
-                                users[i]["photo"] == false
+                                widget.users[i]["photo"] == false
                                     ? "assets/images/defaultpp.jpeg"
                                     : "assets/images/defaultpp.jpeg",
                               ),
@@ -108,7 +71,7 @@ class _SearchPageSearchAndUsersPartState
                           ),
                           Flexible(
                             child: Text(
-                              users[i]["username"],
+                              widget.users[i]["username"],
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               style: const TextStyle(
@@ -124,8 +87,8 @@ class _SearchPageSearchAndUsersPartState
                                 searchPageController.followPerson(
                                     context,
                                     widget.token,
-                                    widget.user["_id"],
-                                    users[i]["_id"]);
+                                    widget.user,
+                                    widget.users[i]["_id"]);
                               },
                               style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
@@ -149,7 +112,7 @@ class _SearchPageSearchAndUsersPartState
                 },
               ),
             ),
-          ),
+          )
         ],
       ),
     );

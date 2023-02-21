@@ -3,7 +3,6 @@ import 'package:gamebrige/src/screens/appMain/homePage/controller/homePageContro
 import 'package:gamebrige/src/screens/appMain/homePage/particals/homePageBlogs.dart';
 import 'package:gamebrige/src/screens/appMain/homePage/particals/homePageBodyTopFont.dart';
 import 'package:gamebrige/src/screens/appMain/homePage/particals/homePageHeader.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class HomePageScaffold extends StatefulWidget {
   final token;
@@ -41,33 +40,24 @@ class _HomePageScaffoldState extends State<HomePageScaffold> {
           body: Column(
             children: [
               //header
-              HomePageHeader(),
+              const HomePageHeader(),
               //top font
-              HomePageTopFont(),
+              const HomePageTopFont(),
               //blogs
-
-              widget.gettingData
-                  ? Container(
-                      height: 300,
-                      child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: Colors.white,
-                        size: 100,
+              widget.blogs.isEmpty
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
                     )
-                  : widget.blogs.isEmpty
-                      ? const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Text(
-                              "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        )
-                      : HomePageBlogs(
-                          user: widget.user,
-                          token: widget.token,
-                          blogs: widget.blogs)
+                  : HomePageBlogs(
+                      user: widget.user,
+                      token: widget.token,
+                      blogs: widget.blogs)
             ],
           )),
     );

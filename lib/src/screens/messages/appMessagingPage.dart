@@ -286,12 +286,14 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                   ),
                   //message box
                   gettingData
-                      ? Center(
-                          child: SizedBox(
-                            height: 300,
-                            child: LoadingAnimationWidget.staggeredDotsWave(
-                              color: Colors.white,
-                              size: 100,
+                      ? Flexible(
+                          child: Center(
+                            child: SizedBox(
+                              height: 300,
+                              child: LoadingAnimationWidget.staggeredDotsWave(
+                                color: Colors.white,
+                                size: 100,
+                              ),
                             ),
                           ),
                         )

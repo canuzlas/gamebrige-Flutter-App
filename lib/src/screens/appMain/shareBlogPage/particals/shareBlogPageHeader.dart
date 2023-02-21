@@ -21,10 +21,6 @@ class ShareBlogPageHeader extends StatelessWidget {
             ),
             const Spacer(),
             IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications),
-            ),
-            IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/AllMessages');
               },

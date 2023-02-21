@@ -19,7 +19,7 @@ class LoginPageController {
   }
 
   login(context, usernameormail, pass) async {
-    getSharedPreferences();
+    await getSharedPreferences();
     if (usernameormail.isEmpty || pass.isEmpty) {
       Fluttertoast.showToast(
           msg: "Kullanıcı adı ve şifre boş bırakılamaz.",
@@ -68,9 +68,10 @@ class LoginPageController {
                 textColor: Colors.white,
                 fontSize: 16.0);
           } else {
-            print(decodedResponse);
+            //print(decodedResponse["user"]);
             await prefs.setString("user", jsonEncode(decodedResponse["user"]));
             suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
+
             //ref.read(suser.state).state = jsonEncode(decodedResponse["user"]);
             try {
               UserCredential userCredential =

@@ -6,19 +6,15 @@ import 'package:gamebrige/src/screens/appMain/homePage/state/home_page_state.dar
 
 import '../particals/homePageLoadingScaffold.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends ConsumerState<HomePage> {
+class HomePage extends ConsumerWidget {
   HomePageController homePageController = HomePageController();
 
+  HomePage({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final homePaageDatas = ref.watch(homePageFutureProvider);
+
     return homePaageDatas.when(
       loading: () => HomePageLoadingScaffold(),
       data: (data) {
@@ -28,10 +24,10 @@ class _HomePageState extends ConsumerState<HomePage> {
           token: data?["token"],
           user: data?["user"],
           blogs: data?["blogs"],
-          gettingData: false,
         );
       },
-      error: (err, stack) => Text(err.toString()),
+      error: (err, stack) =>
+          SafeArea(child: Center(child: Text(err.toString()))),
     );
   }
 }

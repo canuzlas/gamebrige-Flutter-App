@@ -23,9 +23,9 @@ class _HomePageLoadingScaffoldState extends State<HomePageLoadingScaffold> {
         body: Column(
           children: [
             //header
-            HomePageHeader(),
+            const HomePageHeader(),
             //top font
-            HomePageTopFont(),
+            const HomePageTopFont(),
             Center(
               child: Container(
                 height: 300,

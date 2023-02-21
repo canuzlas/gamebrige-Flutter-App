@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/homePageController.dart';
+import '../state/home_page_state.dart';
 
-class HomePageBlogs extends StatefulWidget {
+class HomePageBlogs extends ConsumerStatefulWidget {
   final token;
   final user;
   final blogs;
@@ -11,17 +13,18 @@ class HomePageBlogs extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<HomePageBlogs> createState() => _HomePageBlogsState();
+  ConsumerState<HomePageBlogs> createState() => _HomePageBlogsState();
 }
 
-class _HomePageBlogsState extends State<HomePageBlogs> {
+class _HomePageBlogsState extends ConsumerState<HomePageBlogs> {
   HomePageController homePageController = HomePageController();
+
   @override
   Widget build(BuildContext context) {
     return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
-          homePageController.getFollowedsBlogs(widget.token, widget.user);
+          ref.refresh(homePageFutureProvider);
         },
         child: ListView.builder(
           padding: const EdgeInsets.all(10),

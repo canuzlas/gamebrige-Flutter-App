@@ -17,15 +17,14 @@ class StartPageScaffold extends StatelessWidget {
         ),
         //font
         Container(
-          padding: EdgeInsets.only(bottom: 200),
-          child: const Center(
-            child: Text("GAMEBRIGE",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 45,
-                  fontWeight: FontWeight.w900,
-                )),
-          ),
+          alignment: Alignment.bottomCenter,
+          padding: const EdgeInsets.only(bottom: 100),
+          child: const Text("GAMEBRIGE",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 45,
+                fontWeight: FontWeight.w900,
+              )),
         ),
       ]),
     );

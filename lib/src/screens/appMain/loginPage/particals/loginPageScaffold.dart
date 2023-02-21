@@ -76,7 +76,7 @@ class _LoginPageScaffoldState extends State<LoginPageScaffold> {
           ),
           //gamebrige yazı
           const Padding(
-            padding: EdgeInsets.only(bottom: 200),
+            padding: EdgeInsets.only(bottom: 450),
             child: Center(
               child: Text("GAMEBRIGE",
                   style: TextStyle(
@@ -87,30 +87,33 @@ class _LoginPageScaffoldState extends State<LoginPageScaffold> {
             ),
           ),
           //login forms
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Center(
-                child: TextFormField(
-              onChanged: (str) {
-                setState(() {
-                  usernameormail = str;
-                });
-              },
-              decoration: const InputDecoration(
-                labelStyle: TextStyle(color: Colors.white60),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white60),
+          Container(
+            margin: const EdgeInsets.only(bottom: 200),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Center(
+                  child: TextFormField(
+                onChanged: (str) {
+                  setState(() {
+                    usernameormail = str;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelStyle: TextStyle(color: Colors.white60),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white60),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  labelText: 'Kullanıcı adı veya e-postanızı girin',
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                labelText: 'Kullanıcı adı veya e-postanızı girin',
-              ),
-              style: TextStyle(color: Colors.white60),
-            )),
+                style: TextStyle(color: Colors.white60),
+              )),
+            ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 120),
+            margin: const EdgeInsets.only(bottom: 80),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Center(
@@ -137,8 +140,9 @@ class _LoginPageScaffoldState extends State<LoginPageScaffold> {
               )),
             ),
           ),
+
           Container(
-            margin: EdgeInsets.only(top: 250),
+            margin: EdgeInsets.only(top: 100),
             child: Center(
               child: OutlinedButton(
                 onPressed: () =>

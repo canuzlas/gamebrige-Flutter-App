@@ -12,13 +12,13 @@ Future<Map<String, dynamic>> getDatasForHomePage() async {
   final user = prefs.getString("user");
 
   final blogs = await homePageController.getFollowedsBlogs(token, user);
-
   return {"token": token, "user": user, "blogs": blogs};
 }
 
-final getDataProvider = Provider((ref) => getDatasForHomePage());
+//final getDataProvider = Provider((ref) => getDatasForHomePage());
 
 final homePageFutureProvider = FutureProvider.autoDispose((ref) {
-  final datas = ref.watch(getDataProvider);
-  return datas;
+  //final datas = ref.watch(getDataProvider);
+  //ref.refresh(getDataProvider);
+  return getDatasForHomePage();
 });

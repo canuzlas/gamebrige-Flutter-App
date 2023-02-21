@@ -8,20 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/myProfilePageController.dart';
 
 class MyProfilePageScaffold extends StatefulWidget {
-  final bool gettingData;
   final token;
   final user;
-  final prefs;
   final blogs;
 
-  const MyProfilePageScaffold(
-      {Key? key,
-      this.token,
-      this.user,
-      this.blogs,
-      required this.gettingData,
-      this.prefs})
-      : super(key: key);
+  const MyProfilePageScaffold({
+    Key? key,
+    this.token,
+    this.user,
+    this.blogs,
+  }) : super(key: key);
 
   @override
   State<MyProfilePageScaffold> createState() => _MyProfilePageScaffoldState();
@@ -51,7 +47,7 @@ class _MyProfilePageScaffoldState extends State<MyProfilePageScaffold> {
       onWillPop: _onWillPop,
       child: Scaffold(
           drawer: MyProfilePageDrawerMenu(user: widget.user),
-          appBar: MyProfilePageAppBar(),
+          appBar: const MyProfilePageAppBar(),
           backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
           body: Column(
             children: [
@@ -67,7 +63,7 @@ class _MyProfilePageScaffoldState extends State<MyProfilePageScaffold> {
                 ),
               ),
               // blogs
-              (widget.blogs.isEmpty && widget.gettingData == false)
+              (widget.blogs.isEmpty)
                   ? const Center(
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
@@ -80,6 +76,7 @@ class _MyProfilePageScaffoldState extends State<MyProfilePageScaffold> {
                   : MyProfilePageBlogsPart(
                       user: widget.user,
                       token: widget.token,
+                      blogs: widget.blogs,
                     )
             ],
           )),

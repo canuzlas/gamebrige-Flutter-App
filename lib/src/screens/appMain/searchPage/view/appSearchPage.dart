@@ -1,35 +1,27 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gamebrige/src/screens/appMain/searchPage/controller/searchPageController.dart';
-import 'package:gamebrige/src/sm/sm_with_riverpod.dart';
+import 'package:gamebrige/src/screens/appMain/searchPage/particals/searchPageScaffold.dart';
+import 'package:gamebrige/src/screens/appMain/searchPage/state/search_page_state.dart';
 
-import '../particals/searchPageScaffold.dart';
+import '../controller/searchPageController.dart';
+import '../particals/searchPageLoadingScaffold.dart';
 
-class SearchPage extends ConsumerStatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<SearchPage> createState() => _SearchPageState();
-}
-
-class _SearchPageState extends ConsumerState<SearchPage> {
+class SearchPage extends ConsumerWidget {
   SearchPageController searchPageController = SearchPageController();
 
-  late var token;
-  late var user;
-
   @override
-  void initState() {
-    super.initState();
-    token = ref.read(stoken);
-    var getuser = ref.read(suser);
-    user = jsonDecode(getuser);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SearchPageScaffold(token: token, user: user);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchPaageDatas = ref.watch(searchPageFutureTokenAndUserProvider);
+    return searchPaageDatas.when(
+      loading: () => const SearchPageLoadingScaffold(),
+      data: (data) {
+        return SearchPageScaffold(
+          token: data?["token"],
+          user: data?["user"],
+          bestUsers: data?["bestUsers"],
+        );
+      },
+      error: (err, stack) => Text(err.toString()),
+    );
   }
 }

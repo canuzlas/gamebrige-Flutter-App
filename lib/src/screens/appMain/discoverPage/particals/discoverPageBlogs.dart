@@ -1,27 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gamebrige/src/screens/appMain/discoverPage/state/discover_page_state.dart';
 
 import '../controller/discoverPageController.dart';
 
-class DiscoverPageBlogs extends StatefulWidget {
+class DiscoverPageBlogs extends ConsumerStatefulWidget {
   final token;
   final user;
-  final prefs;
   final blogs;
-  final gettingData;
-  const DiscoverPageBlogs(
-      {Key? key,
-      this.token,
-      this.user,
-      this.prefs,
-      this.blogs,
-      this.gettingData})
-      : super(key: key);
+  const DiscoverPageBlogs({
+    Key? key,
+    this.token,
+    this.user,
+    this.blogs,
+  }) : super(key: key);
 
   @override
-  State<DiscoverPageBlogs> createState() => _DiscoverPageBlogsState();
+  ConsumerState<DiscoverPageBlogs> createState() => _DiscoverPageBlogsState();
 }
 
-class _DiscoverPageBlogsState extends State<DiscoverPageBlogs> {
+class _DiscoverPageBlogsState extends ConsumerState<DiscoverPageBlogs> {
   DiscoverPageController discoverPageController = DiscoverPageController();
 
   @override
@@ -29,7 +29,7 @@ class _DiscoverPageBlogsState extends State<DiscoverPageBlogs> {
     return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
-          discoverPageController.getAllBlogs(context, widget.token);
+          ref.refresh(discoverPageFutureProvider);
         },
         child: ListView.builder(
           padding: const EdgeInsets.all(10),
@@ -122,7 +122,7 @@ class _DiscoverPageBlogsState extends State<DiscoverPageBlogs> {
                                   ),
                                   onTap: () {
                                     widget.blogs[i]["blog_author"] !=
-                                            widget.user["_id"]
+                                            jsonDecode(widget.user)["_id"]
                                         ? Navigator.pushNamed(
                                             context,
                                             "/OtherProfile",

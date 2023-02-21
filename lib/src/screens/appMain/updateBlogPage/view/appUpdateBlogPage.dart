@@ -23,7 +23,7 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
   late var token;
   late var user;
 
-  updateBlog(token, user) async {
+  updateBlog(context, token, user) async {
     var url = "${dotenv.env['API_URL']!}api/editblog";
     //apiden blogları alıyoruz
     var response = await http.post(Uri.parse(url),
@@ -70,7 +70,8 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
               backgroundColor: Colors.transparent,
               textColor: Colors.white,
               fontSize: 16.0);
-          Navigator.pushNamed(context, "/Tab");
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/Tab', (Route<dynamic> route) => false);
         }
       }
     }
@@ -110,11 +111,9 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
                     ),
                     const Spacer(),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.notifications),
-                    ),
-                    IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/AllMessages');
+                      },
                       icon: const Icon(Icons.message_outlined),
                     ),
                   ],
@@ -183,38 +182,41 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
                         ),
                       ),
                       //text
-                      Container(
-                        margin: EdgeInsets.only(top: 0),
-                        //margin: const EdgeInsets.only(top: 120),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Form(
-                              child: SingleChildScrollView(
-                                child: TextFormField(
-                                  initialValue: widget.blog["blog_text"],
-                                  maxLength: 10000,
-                                  maxLines: _keyboardVisible ? 5 : 15,
-                                  decoration: InputDecoration(
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(10),
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 0),
+                          //margin: const EdgeInsets.only(top: 120),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Form(
+                                child: SingleChildScrollView(
+                                  child: TextFormField(
+                                    initialValue: widget.blog["blog_text"],
+                                    maxLength: 10000,
+                                    maxLines: _keyboardVisible ? 5 : 15,
+                                    decoration: InputDecoration(
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Blog içeriğiniz',
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    labelText: 'Blog içeriğiniz',
+                                    style: TextStyle(color: Colors.black),
+                                    onChanged: (txt) {
+                                      setState(() {
+                                        text = txt;
+                                      });
+                                    },
                                   ),
-                                  style: TextStyle(color: Colors.black),
-                                  onChanged: (txt) {
-                                    setState(() {
-                                      text = txt;
-                                    });
-                                  },
                                 ),
                               ),
                             ),
@@ -237,7 +239,7 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
                                     backgroundColor: Colors.transparent,
                                     textColor: Colors.white,
                                     fontSize: 16.0)
-                                : updateBlog(token, user);
+                                : updateBlog(context, token, user);
                           },
                           style: const ButtonStyle(
                               backgroundColor:

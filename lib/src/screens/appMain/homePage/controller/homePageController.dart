@@ -11,8 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageController {
   FirebaseDatabase database = FirebaseDatabase.instance;
-  FirebaseDatabase database1 = FirebaseDatabase.instance;
-  bool gettingData = true;
+
   late SharedPreferences prefs;
   late List<dynamic> blogs = [];
 
@@ -35,7 +34,15 @@ class HomePageController {
         }));
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
-      return {"error": true};
+      Fluttertoast.showToast(
+          msg: "Uygulamayı tekrar başlatın.!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return [];
     } else {
       if (decodedResponse['tokenError'] != null) {
         Fluttertoast.showToast(
@@ -47,9 +54,9 @@ class HomePageController {
             backgroundColor: Colors.transparent,
             textColor: Colors.white,
             fontSize: 16.0);
+        return [];
       } else {
         blogs = decodedResponse['blogs'];
-        gettingData = false;
         return blogs;
       }
     }
@@ -75,22 +82,19 @@ class HomePageController {
 
     database.databaseURL =
         "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
-    database1.databaseURL =
-        "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
-
     database
         .ref('Messages/${decodedUser["fbuid"]}')
         .onChildChanged
         .listen((event) async {
       var key = event.snapshot.key;
-      var lastMessage = await database1
+      var lastMessage = await database
           .ref('Messages/${decodedUser["fbuid"]}/${key}')
           .limitToLast(1)
           .get();
       var res = lastMessage.value as Map;
       print(res.values.last["sender_fbuid"] == decodedUser["fbuid"]);
       if (res.values.last["sender_fbuid"] == decodedUser["fbuid"]) {
-        return null;
+        return;
       } else {
         var status = await Permission.notification.status;
         if (status.isDenied || status.isPermanentlyDenied) {

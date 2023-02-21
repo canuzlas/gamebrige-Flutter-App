@@ -62,12 +62,7 @@ class _OtherProfilePageScaffoldState extends State<OtherProfilePageScaffold> {
             person_id: widget.person_id,
             blogs: blogs,
           ),
-          Center(
-            child: Container(
-              margin: EdgeInsets.all(15),
-              child: Text("PAYLAŞILAN BLOGLAR"),
-            ),
-          ),
+
           // blogs
           OtherProfilePagePersonsBlogs(
             token: widget.token,

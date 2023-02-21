@@ -139,7 +139,7 @@ class OtherProfilePageController {
     }
   }
 
-  followPerson(context, token, userid, willfollowid) async {
+  followPerson(context, token, user, willfollowid) async {
     var url = "${dotenv.env['API_URL']!}api/followperson";
     //apiden blogları alıyoruz
     var response = await http.post(
@@ -151,7 +151,7 @@ class OtherProfilePageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
-          'user_id': userid,
+          'user': user,
           'willfollowpersonid': willfollowid,
         },
       ),
@@ -184,7 +184,6 @@ class OtherProfilePageController {
 
           suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
           prefs.setString("user", jsonEncode(decodedResponse["user"]));
-          isPersonFollowing = false;
         } else {
           if (decodedResponse["error"] == true) {
             Fluttertoast.showToast(
@@ -199,7 +198,6 @@ class OtherProfilePageController {
             //print(jsonEncode(decodedResponse["user"]));
             suser = Provider((ref) => jsonEncode(decodedResponse["user"]));
             prefs.setString("user", jsonEncode(decodedResponse["user"]));
-            isPersonFollowing = true;
             Fluttertoast.showToast(
                 msg: "Takip edildi!",
                 toastLength: Toast.LENGTH_LONG,

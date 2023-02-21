@@ -57,11 +57,13 @@ class _OtherProfilePagePersonsBlogsState
   @override
   Widget build(BuildContext context) {
     return gettingData
-        ? Container(
-            height: 300,
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white,
-              size: 100,
+        ? Flexible(
+            child: SizedBox(
+              height: 300,
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.white,
+                size: 100,
+              ),
             ),
           )
         : blogs.isEmpty
@@ -74,117 +76,130 @@ class _OtherProfilePagePersonsBlogsState
                   ),
                 ),
               )
-            : Flexible(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    otherProfilePageController.getThisUsersBlogs(
-                        context, widget.token, widget.person_id["user_id"]);
-                  },
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: blogs.length,
-                    itemBuilder: (context, i) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, "/ReadSelectedBlog",
-                              arguments: {"blog_id": blogs[i]["_id"]});
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          padding: const EdgeInsets.all(15),
-                          height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: const Color.fromRGBO(203, 241, 245, 1),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 7,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
+            : Column(
+                children: [
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.all(15),
+                      child: Text("PAYLAŞILAN BLOGLAR"),
+                    ),
+                  ),
+                  Flexible(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        otherProfilePageController.getThisUsersBlogs(
+                            context, widget.token, widget.person_id["user_id"]);
+                      },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(10),
+                        itemCount: blogs.length,
+                        itemBuilder: (context, i) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, "/ReadSelectedBlog",
+                                  arguments: {"blog_id": blogs[i]["_id"]});
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              padding: const EdgeInsets.all(15),
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: const Color.fromRGBO(203, 241, 245, 1),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                constraints: BoxConstraints(maxWidth: 100),
-                                child: Image.asset(
-                                  "assets/images/startpage-bg.jpeg",
-                                  fit: BoxFit.fill,
-                                  width: 100,
-                                ),
-                              ),
-                              Flexible(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.topCenter,
-                                      padding: const EdgeInsets.only(
-                                        left: 20,
-                                        top: 0,
-                                      ),
-                                      child: Text(
-                                        "${blogs[i]["blog_title"]}",
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: true,
-                                        maxLines: 4,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w900),
-                                      ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    constraints: BoxConstraints(maxWidth: 100),
+                                    child: Image.asset(
+                                      "assets/images/startpage-bg.jpeg",
+                                      fit: BoxFit.fill,
+                                      width: 100,
                                     ),
-                                    Row(
+                                  ),
+                                  Flexible(
+                                    child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Flexible(
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 5, left: 8),
-                                                child: CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundImage: AssetImage(
-                                                    person["photo"] == false
-                                                        ? "assets/images/defaultpp.jpeg"
-                                                        : "assets/images/defaultpp.jpeg",
-                                                  ),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                child: Text(
-                                                  blogs[i]
-                                                      ["blog_author_username"],
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  softWrap: true,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                        Container(
+                                          alignment: Alignment.topCenter,
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                            top: 0,
+                                          ),
+                                          child: Text(
+                                            "${blogs[i]["blog_title"]}",
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            maxLines: 4,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w900),
                                           ),
                                         ),
-                                        Text(
-                                          "${blogs[i]["createdAt"].substring(0, 10)}",
-                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Flexible(
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 5, left: 8),
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        person["photo"] == false
+                                                            ? "assets/images/defaultpp.jpeg"
+                                                            : "assets/images/defaultpp.jpeg",
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Flexible(
+                                                    child: Text(
+                                                      blogs[i][
+                                                          "blog_author_username"],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      softWrap: true,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              "${blogs[i]["createdAt"].substring(0, 10)}",
+                                            ),
+                                          ],
+                                        )
                                       ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                ],
               );
   }
 }

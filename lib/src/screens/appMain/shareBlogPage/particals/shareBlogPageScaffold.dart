@@ -93,37 +93,40 @@ class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
                         ),
                       ),
                       //text
-                      Container(
-                        margin: EdgeInsets.only(top: 0),
-                        //margin: const EdgeInsets.only(top: 120),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Form(
-                              child: SingleChildScrollView(
-                                child: TextField(
-                                  maxLength: 10000,
-                                  maxLines: _keyboardVisible ? 5 : 15,
-                                  decoration: InputDecoration(
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(10),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 0),
+                          //margin: const EdgeInsets.only(top: 120),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Form(
+                                child: SingleChildScrollView(
+                                  child: TextField(
+                                    maxLength: 10000,
+                                    maxLines: _keyboardVisible ? 15 : 15,
+                                    decoration: InputDecoration(
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Blog içeriğiniz',
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    labelText: 'Blog içeriğiniz',
+                                    style: TextStyle(color: Colors.black),
+                                    onChanged: (txt) {
+                                      setState(() {
+                                        text = txt;
+                                      });
+                                    },
                                   ),
-                                  style: TextStyle(color: Colors.black),
-                                  onChanged: (txt) {
-                                    setState(() {
-                                      text = txt;
-                                    });
-                                  },
                                 ),
                               ),
                             ),

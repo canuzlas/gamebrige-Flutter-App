@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepOnePage.dart';
 import 'package:gamebrige/src/screens/RegisterProcesses/appRegisterStepTwoPage.dart';
-import 'package:gamebrige/src/screens/appMain/appUpdateBlogPage.dart';
 import 'package:gamebrige/src/screens/appMain/bottomBar/view/appBottomBarPage.dart';
 import 'package:gamebrige/src/screens/appMain/landingPage/view/appLandingPage.dart';
 import 'package:gamebrige/src/screens/appMain/loginPage/view/appLoginPage.dart';
 import 'package:gamebrige/src/screens/appMain/otherProfilePage/view/appOtherProfilePage.dart';
 import 'package:gamebrige/src/screens/appMain/readSelectedBlogPage/view/appReadSelectedBlogPage.dart';
 import 'package:gamebrige/src/screens/appMain/shareBlogPage/view/appShareBlogPage.dart';
-import 'package:gamebrige/src/screens/appMain/startPage/view/appStartPage.dart';
+import 'package:gamebrige/src/screens/appMain/updateBlogPage/view/appUpdateBlogPage.dart';
 import 'package:gamebrige/src/screens/messages/appAllMessagesPage.dart';
 import 'package:gamebrige/src/screens/messages/appMessagingPage.dart';
 import 'package:gamebrige/src/screens/messages/appSendMessagePage.dart';
@@ -16,11 +15,13 @@ import 'package:gamebrige/src/screens/messages/appSendMessagePage.dart';
 import '../screens/404/dortyuzdort.dart';
 import '../screens/RegisterProcesses/appRegisterStepFourPage.dart';
 import '../screens/RegisterProcesses/appRegisterStepThreePage.dart';
+import '../screens/appMain/startPage/view/appStartPage.dart';
 
 class GeneratedRouter {
   static Route? router(RouteSettings settings) {
     switch (settings.name) {
       case '/':
+        //return MaterialPageRoute(builder: (context) => const BottomBar());
         return MaterialPageRoute(builder: (context) => const StartPage());
       case '/Tab':
         return MaterialPageRoute(builder: (context) => const BottomBar());

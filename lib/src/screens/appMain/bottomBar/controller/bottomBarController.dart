@@ -7,10 +7,10 @@ import '../../searchPage/view/appSearchPage.dart';
 
 class BottomBarController {
   int selectedIndex = 0;
-  ProfilePage profilePage = const ProfilePage();
-  DiscoverPage blogsPage = const DiscoverPage();
-  HomePage homePage = const HomePage();
-  SearchPage searchPage = const SearchPage();
+  ProfilePage profilePage = ProfilePage();
+  DiscoverPage blogsPage = DiscoverPage();
+  HomePage homePage = HomePage();
+  SearchPage searchPage = SearchPage();
 
   List<Widget> getBottomBarPages() {
     List<Widget> allPages = [homePage, blogsPage, searchPage, profilePage];
