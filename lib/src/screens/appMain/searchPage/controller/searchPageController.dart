@@ -175,13 +175,14 @@ class SearchPageController {
       } else {
         if (decodedResponse["error"] == "followed") {
           Fluttertoast.showToast(
-              msg: "Zaten takip ediyorsun!",
+              msg: "Takipten Çıkıldı!",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.TOP,
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.transparent,
               textColor: Colors.white,
               fontSize: 16.0);
+          prefs.setString("user", jsonEncode(decodedResponse["user"]));
         } else {
           if (decodedResponse["error"] == true) {
             Fluttertoast.showToast(

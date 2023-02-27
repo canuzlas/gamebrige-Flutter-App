@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/searchPageController.dart';
 
-class SearchPageRecommendedUsersPart extends StatefulWidget {
+class SearchPageRecommendedUsersPart extends ConsumerStatefulWidget {
   final token;
   final user;
   final bestUsers;
@@ -11,12 +12,12 @@ class SearchPageRecommendedUsersPart extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<SearchPageRecommendedUsersPart> createState() =>
+  ConsumerState<SearchPageRecommendedUsersPart> createState() =>
       _SearchPageRecommendedUsersPartState();
 }
 
 class _SearchPageRecommendedUsersPartState
-    extends State<SearchPageRecommendedUsersPart> {
+    extends ConsumerState<SearchPageRecommendedUsersPart> {
   SearchPageController searchPageController = SearchPageController();
 
   @override
@@ -56,7 +57,7 @@ class _SearchPageRecommendedUsersPartState
                         ],
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 5),
@@ -69,7 +70,8 @@ class _SearchPageRecommendedUsersPartState
                               ),
                             ),
                           ),
-                          Flexible(
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               widget.bestUsers[i]["username"],
                               overflow: TextOverflow.ellipsis,
@@ -79,31 +81,6 @@ class _SearchPageRecommendedUsersPartState
                               ),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            child: OutlinedButton(
-                              onPressed: () {
-                                searchPageController.followPerson(
-                                    context,
-                                    widget.token,
-                                    widget.user,
-                                    widget.bestUsers[i]["_id"]);
-                              },
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Colors.transparent),
-                                  padding: MaterialStatePropertyAll(
-                                      EdgeInsets.all(8.0)),
-                                  elevation: MaterialStatePropertyAll(1.0),
-                                  side: MaterialStatePropertyAll(BorderSide(
-                                      width: 1.0, color: Colors.white))),
-                              child: const Text(
-                                "Takip Et",
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.white),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),

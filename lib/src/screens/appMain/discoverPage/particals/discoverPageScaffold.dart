@@ -33,25 +33,35 @@ class _DiscoverPageScaffoldState extends State<DiscoverPageScaffold> {
           body: Column(
             children: [
               //header
-              DiscoverPageHeader(),
-              //top font
-              DiscoverPageTopFont(),
+              const DiscoverPageHeader(),
               //blogs
               widget.blogs.isEmpty
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
-                          style: TextStyle(fontSize: 18),
+                  ? Column(
+                      children: [
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Image.asset(
+                              "assets/images/notfound.gif",
+                              height: 150.0,
+                              width: 150.0,
+                            ),
+                          ),
                         ),
-                      ),
+                        const Center(
+                          child: Text(
+                              "Uygulama henüz yeni ilk bloğu sen paylaş !"),
+                        ),
+                      ],
                     )
-                  : DiscoverPageBlogs(
-                      token: widget.token,
-                      user: widget.user,
-                      blogs: widget.blogs,
-                    )
+                  :
+                  //top font
+                  const DiscoverPageTopFont(),
+              DiscoverPageBlogs(
+                token: widget.token,
+                user: widget.user,
+                blogs: widget.blogs,
+              )
             ],
           )),
     );

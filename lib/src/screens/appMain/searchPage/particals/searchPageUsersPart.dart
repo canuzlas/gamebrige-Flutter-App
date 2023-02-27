@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../state/search_page_state.dart';
-
 class SearchPageUsersPart extends ConsumerStatefulWidget {
   final token;
   final user;
@@ -56,7 +54,7 @@ class _SearchPageUsersPartState extends ConsumerState<SearchPageUsersPart> {
                         ],
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 5),
@@ -69,7 +67,8 @@ class _SearchPageUsersPartState extends ConsumerState<SearchPageUsersPart> {
                               ),
                             ),
                           ),
-                          Flexible(
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               widget.users[i]["username"],
                               overflow: TextOverflow.ellipsis,
@@ -80,31 +79,6 @@ class _SearchPageUsersPartState extends ConsumerState<SearchPageUsersPart> {
                             ),
                           ),
                           //follow button
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            child: OutlinedButton(
-                              onPressed: () {
-                                searchPageController.followPerson(
-                                    context,
-                                    widget.token,
-                                    widget.user,
-                                    widget.users[i]["_id"]);
-                              },
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Colors.transparent),
-                                  padding: MaterialStatePropertyAll(
-                                      EdgeInsets.all(8.0)),
-                                  elevation: MaterialStatePropertyAll(1.0),
-                                  side: MaterialStatePropertyAll(BorderSide(
-                                      width: 1.0, color: Colors.white))),
-                              child: const Text(
-                                "Takip Et",
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.white),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),

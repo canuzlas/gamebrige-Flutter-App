@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class MyProfilePageUserProfilePart extends StatefulWidget {
   final user;
@@ -86,14 +85,7 @@ class _MyProfilePageUserProfilePartState
               margin: EdgeInsets.all(20),
               child: OutlinedButton(
                 onPressed: () {
-                  Fluttertoast.showToast(
-                      msg: "Çok Yakında Aktif Edilecek!",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.TOP,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.transparent,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
+                  Navigator.pushNamed(context, '/EditProfile');
                 },
                 style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(

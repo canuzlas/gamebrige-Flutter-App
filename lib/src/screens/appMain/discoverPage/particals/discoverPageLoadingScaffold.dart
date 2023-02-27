@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'discoverPageHeader.dart';
-import 'discoverPageTopFont.dart';
 
 class DiscoverPageLoadingPage extends StatelessWidget {
   const DiscoverPageLoadingPage({Key? key}) : super(key: key);
@@ -15,8 +14,6 @@ class DiscoverPageLoadingPage extends StatelessWidget {
           children: [
             //header
             const DiscoverPageHeader(),
-            //top font
-            const DiscoverPageTopFont(),
             Center(
               child: SizedBox(
                 height: 300,

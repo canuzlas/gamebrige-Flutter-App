@@ -79,7 +79,6 @@ class HomePageController {
 
   createMessageListenerForNotification(user) async {
     var decodedUser = jsonDecode(user);
-
     database.databaseURL =
         "https://com-uzlas-gamebrige-default-rtdb.firebaseio.com/";
     database
@@ -92,7 +91,6 @@ class HomePageController {
           .limitToLast(1)
           .get();
       var res = lastMessage.value as Map;
-      print(res.values.last["sender_fbuid"] == decodedUser["fbuid"]);
       if (res.values.last["sender_fbuid"] == decodedUser["fbuid"]) {
         return;
       } else {

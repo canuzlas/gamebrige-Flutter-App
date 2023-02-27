@@ -3,8 +3,6 @@ import 'package:gamebrige/src/screens/appMain/homePage/controller/homePageContro
 import 'package:gamebrige/src/screens/appMain/homePage/particals/homePageHeader.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import 'homePageBodyTopFont.dart';
-
 class HomePageLoadingScaffold extends StatefulWidget {
   HomePageLoadingScaffold({Key? key}) : super(key: key);
 
@@ -24,8 +22,6 @@ class _HomePageLoadingScaffoldState extends State<HomePageLoadingScaffold> {
           children: [
             //header
             const HomePageHeader(),
-            //top font
-            const HomePageTopFont(),
             Center(
               child: Container(
                 height: 300,

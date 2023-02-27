@@ -31,17 +31,12 @@ class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
           children: [
             //header
             const ShareBlogPageHeader(),
-            const Padding(
-              padding: EdgeInsets.all(5),
-              child: Text(
-                  "Yapacağın paylaşımın oyunlarla ilgili olduğundan emin ol :)"),
-            ),
             //form
             Flexible(
               child: Container(
                   padding: EdgeInsets.zero,
                   margin: const EdgeInsets.only(
-                      bottom: 50, left: 10, right: 10, top: 20),
+                      bottom: 20, left: 10, right: 10, top: 20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     color: const Color.fromRGBO(203, 241, 245, 1),
@@ -60,11 +55,10 @@ class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
                       //title
                       Container(
                         margin: EdgeInsets.only(top: 0),
-
                         //margin: const EdgeInsets.only(top: 120),
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: Form(
                               child: TextField(
                                 maxLength: 60,
@@ -99,12 +93,12 @@ class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
                           //margin: const EdgeInsets.only(top: 120),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(15.0),
+                              padding: const EdgeInsets.all(10.0),
                               child: Form(
                                 child: SingleChildScrollView(
                                   child: TextField(
                                     maxLength: 10000,
-                                    maxLines: _keyboardVisible ? 15 : 15,
+                                    maxLines: _keyboardVisible ? 13 : 13,
                                     decoration: InputDecoration(
                                       labelStyle:
                                           TextStyle(color: Colors.black),

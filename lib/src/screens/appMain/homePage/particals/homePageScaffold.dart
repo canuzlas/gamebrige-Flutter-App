@@ -41,23 +41,30 @@ class _HomePageScaffoldState extends State<HomePageScaffold> {
             children: [
               //header
               const HomePageHeader(),
-              //top font
-              const HomePageTopFont(),
               //blogs
               widget.blogs.isEmpty
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          "Görüntülenecek blog bulunamadı. Lütfen keşfet kısmına göz at.",
-                          style: TextStyle(fontSize: 18),
+                  ? Column(
+                      children: [
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Image.asset(
+                              "assets/images/notfound.gif",
+                              height: 150.0,
+                              width: 150.0,
+                            ),
+                          ),
                         ),
-                      ),
+                        const Center(
+                          child: Text("Keşfet kısmına göz atmalısın"),
+                        ),
+                      ],
                     )
-                  : HomePageBlogs(
-                      user: widget.user,
-                      token: widget.token,
-                      blogs: widget.blogs)
+                  :
+                  //top font
+                  const HomePageTopFont(),
+              HomePageBlogs(
+                  user: widget.user, token: widget.token, blogs: widget.blogs)
             ],
           )),
     );

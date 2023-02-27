@@ -7,7 +7,7 @@ class HomePageTopFont extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.all(20),
-      child: Text("Takip Ettiğin Kişilerin Gönderileri"),
+      child: Text("Takip ettiğin kişilerin gönderileri."),
     );
   }
 }
