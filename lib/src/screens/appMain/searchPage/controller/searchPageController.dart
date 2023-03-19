@@ -33,6 +33,7 @@ class SearchPageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'userid': refuser["_id"],
           "word": txt
         },
@@ -92,6 +93,7 @@ class SearchPageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'user': user,
         },
       ),
@@ -152,6 +154,7 @@ class SearchPageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'user': user,
           'willfollowpersonid': willfollowid,
         },

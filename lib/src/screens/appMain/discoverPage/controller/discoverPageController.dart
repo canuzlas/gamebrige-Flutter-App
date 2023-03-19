@@ -22,7 +22,11 @@ class DiscoverPageController {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode({'appId': dotenv.env['APP_ID'], 'token': token}));
+        body: jsonEncode({
+          'appId': dotenv.env['APP_ID'],
+          'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET']
+        }));
     var decodedResponse = jsonDecode(response.body);
     if (decodedResponse['appId'] != null) {
       Fluttertoast.showToast(

@@ -28,8 +28,7 @@ class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Color.fromRGBO(203, 241, 245, 1),
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(
@@ -42,9 +41,9 @@ class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
                 CircleAvatar(
                   radius: 35,
                   backgroundImage: AssetImage(
-                    widget.user["photo"] == false
+                    widget.user["photo"] == "false"
                         ? "assets/images/defaultpp.jpeg"
-                        : "assets/images/defaultpp.jpeg",
+                        : "assets/images/${widget.user["photo"]}",
                   ),
                 ),
                 Flexible(
@@ -52,7 +51,8 @@ class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
                     widget.user["username"],
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -74,6 +74,12 @@ class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
             title: const Text('Mesajlarım'),
             onTap: () {
               Navigator.pushNamed(context, '/AllMessages');
+            },
+          ),
+          ListTile(
+            title: const Text('Şifreni değiştir'),
+            onTap: () {
+              Navigator.pushNamed(context, '/ChangePassword');
             },
           ),
           ListTile(

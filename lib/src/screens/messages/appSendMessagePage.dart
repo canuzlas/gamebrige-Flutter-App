@@ -169,9 +169,9 @@ class _SendMessagePageState extends ConsumerState<SendMessagePage> {
                                           CircleAvatar(
                                             radius: 35,
                                             backgroundImage: AssetImage(
-                                              users[i]["photo"] == false
+                                              users[i]["photo"] == "false"
                                                   ? "assets/images/defaultpp.jpeg"
-                                                  : "assets/images/defaultpp.jpeg",
+                                                  : "assets/images/${users[i]["photo"]}",
                                             ),
                                           ),
                                           Column(
@@ -181,6 +181,9 @@ class _SendMessagePageState extends ConsumerState<SendMessagePage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
+                                                alignment: Alignment.center,
+                                                padding:
+                                                    EdgeInsets.only(left: 20),
                                                 child: Text(
                                                   users[i]["username"]
                                                       .toString(),
@@ -188,20 +191,17 @@ class _SendMessagePageState extends ConsumerState<SendMessagePage> {
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
+                                              ),
+                                              Container(
                                                 alignment: Alignment.center,
                                                 padding:
                                                     EdgeInsets.only(left: 20),
-                                              ),
-                                              Container(
                                                 child: Text(
                                                   users[i]["name"].toString(),
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w300,
                                                   ),
                                                 ),
-                                                alignment: Alignment.center,
-                                                padding:
-                                                    EdgeInsets.only(left: 20),
                                               )
                                             ],
                                           )

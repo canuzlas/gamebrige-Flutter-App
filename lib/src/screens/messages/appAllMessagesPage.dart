@@ -228,7 +228,7 @@ class _AllMessagesPageState extends ConsumerState<AllMessagesPage> {
                                               messages[i]["sender_photo"] ==
                                                       false
                                                   ? "assets/images/defaultpp.jpeg"
-                                                  : "assets/images/defaultpp.jpeg",
+                                                  : "assets/images/${messages[i]["sender_photo"]}",
                                             ),
                                           ),
                                         ),

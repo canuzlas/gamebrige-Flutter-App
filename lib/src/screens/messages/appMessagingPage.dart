@@ -152,17 +152,17 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
 
   void initAsyncStorage() async {
     prefs = await SharedPreferences.getInstance();
+    var res = prefs.getString("user");
+    user = jsonDecode(res.toString());
+    var token = ref.read(stoken);
+    getMessaginPersonData(token, widget.messagingUser["fbuid"]);
+    createMessageListener();
   }
 
   @override
   void initState() {
     super.initState();
-    var res = ref.read(suser);
-    user = jsonDecode(res);
-    var token = ref.read(stoken);
     initAsyncStorage();
-    getMessaginPersonData(token, widget.messagingUser["fbuid"]);
-    createMessageListener();
   }
 
   @override
@@ -213,9 +213,9 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                 CircleAvatar(
                                   radius: 20,
                                   backgroundImage: AssetImage(
-                                    messagingPerson["photo"] == false
+                                    messagingPerson["photo"] == "false"
                                         ? "assets/images/defaultpp.jpeg"
-                                        : "assets/images/defaultpp.jpeg",
+                                        : "assets/images/${messagingPerson["photo"]}",
                                   ),
                                 ),
                                 GestureDetector(
@@ -230,7 +230,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 20, bottom: 5),
+                                        left: 10, bottom: 5),
                                     child: Column(
                                       children: [
                                         Text(
@@ -238,7 +238,7 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                               .toString(),
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 20),
+                                              fontSize: 14),
                                         ),
                                         Text(
                                           messagingPerson["name"].toString(),
@@ -355,13 +355,15 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                                   ),
                                                 ),
                                               ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(
+                                              Padding(
+                                                padding: const EdgeInsets.only(
                                                     right: 0.0, left: 10),
                                                 child: CircleAvatar(
                                                   radius: 20,
                                                   backgroundImage: AssetImage(
-                                                    "assets/images/defaultpp.jpeg",
+                                                    user["photo"] == "false"
+                                                        ? "assets/images/defaultpp.jpeg"
+                                                        : "assets/images/${user["photo"]}",
                                                   ),
                                                 ),
                                               ),
@@ -373,13 +375,16 @@ class _MessagingPageState extends ConsumerState<MessagingPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              const Padding(
-                                                padding: EdgeInsets.only(
+                                              Padding(
+                                                padding: const EdgeInsets.only(
                                                     left: 0.0, right: 10),
                                                 child: CircleAvatar(
                                                   radius: 20,
                                                   backgroundImage: AssetImage(
-                                                    "assets/images/defaultpp.jpeg",
+                                                    messages[i]["photo"] ==
+                                                            "false"
+                                                        ? "assets/images/defaultpp.jpeg"
+                                                        : "assets/images/${messages[i]["sender_photo"]}",
                                                   ),
                                                 ),
                                               ),

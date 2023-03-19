@@ -27,9 +27,9 @@ class _MyProfilePageUserProfilePartState
               CircleAvatar(
                 radius: 35,
                 backgroundImage: AssetImage(
-                  widget.user["photo"] == false
+                  widget.user["photo"] == "false"
                       ? "assets/images/defaultpp.jpeg"
-                      : "assets/images/defaultpp.jpeg",
+                      : "assets/images/${widget.user["photo"]}",
                 ),
               ),
               Column(

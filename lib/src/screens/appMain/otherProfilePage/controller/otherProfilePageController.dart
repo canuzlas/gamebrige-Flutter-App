@@ -33,6 +33,7 @@ class OtherProfilePageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           '_id': id,
         }));
     var decodedResponse = jsonDecode(response.body);
@@ -66,6 +67,7 @@ class OtherProfilePageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           '_id': id,
         }));
     var decodedResponse = jsonDecode(response.body);
@@ -98,6 +100,7 @@ class OtherProfilePageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'reported_id': reported_id,
           'reporting_person': reporting_id
         }));
@@ -151,6 +154,7 @@ class OtherProfilePageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'user': user,
           'willfollowpersonid': willfollowid,
         },

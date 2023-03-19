@@ -16,6 +16,7 @@ class ShareBlogController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'user': user,
           'title': title,
           'text': text

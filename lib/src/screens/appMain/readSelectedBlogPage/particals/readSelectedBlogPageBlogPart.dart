@@ -85,9 +85,9 @@ class _ReadSelectedBlogPageBlogPartState
                             child: CircleAvatar(
                               radius: 35,
                               backgroundImage: AssetImage(
-                                widget.author["photo"] == false
+                                widget.author["photo"] == "false"
                                     ? "assets/images/defaultpp.jpeg"
-                                    : "assets/images/defaultpp.jpeg",
+                                    : "assets/images/${widget.author["photo"]}",
                               ),
                             ),
                           ),

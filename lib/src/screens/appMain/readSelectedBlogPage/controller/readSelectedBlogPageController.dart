@@ -21,6 +21,7 @@ class ReadSelectedBlogPageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'blog_id': blogId
         }));
     var decodedResponse = jsonDecode(response.body);
@@ -65,6 +66,7 @@ class ReadSelectedBlogPageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'blog_id': blogId,
           'reporting_person': user["_id"]
         }));

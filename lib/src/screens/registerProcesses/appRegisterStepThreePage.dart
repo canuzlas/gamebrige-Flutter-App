@@ -144,7 +144,7 @@ class _RegisterStepThreePageState extends State<RegisterStepThreePage> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
-                        labelText: 'Kullanıcı adı (değiştirilemez)',
+                        labelText: 'Kullanıcı adı',
                       ),
                       style: TextStyle(color: Colors.white),
                       onChanged: (txt) {

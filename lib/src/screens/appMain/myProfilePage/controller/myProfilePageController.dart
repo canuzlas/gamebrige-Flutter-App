@@ -26,6 +26,7 @@ class MyProfilePageController {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           '_id': user["_id"],
         }));
     var decodedResponse = jsonDecode(response.body);
@@ -70,6 +71,7 @@ class MyProfilePageController {
         {
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'blog_id': id,
         },
       ),

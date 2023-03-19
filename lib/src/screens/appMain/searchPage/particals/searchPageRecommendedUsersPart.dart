@@ -64,9 +64,9 @@ class _SearchPageRecommendedUsersPartState
                             child: CircleAvatar(
                               radius: 25,
                               backgroundImage: AssetImage(
-                                widget.bestUsers[i]["photo"] == false
+                                widget.bestUsers[i]["photo"] == "false"
                                     ? "assets/images/defaultpp.jpeg"
-                                    : "assets/images/defaultpp.jpeg",
+                                    : "assets/images/${widget.bestUsers[i]["photo"]}",
                               ),
                             ),
                           ),

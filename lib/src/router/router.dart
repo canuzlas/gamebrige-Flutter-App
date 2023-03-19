@@ -13,6 +13,7 @@ import 'package:gamebrige/src/screens/appMain/updateBlogPage/view/appUpdateBlogP
 import 'package:gamebrige/src/screens/messages/appAllMessagesPage.dart';
 import 'package:gamebrige/src/screens/messages/appMessagingPage.dart';
 import 'package:gamebrige/src/screens/messages/appSendMessagePage.dart';
+import 'package:gamebrige/src/screens/passwordProceses/changePasswordPage/view/appChangePasswordPage.dart';
 
 import '../screens/404/dortyuzdort.dart';
 import '../screens/RegisterProcesses/appRegisterStepFourPage.dart';
@@ -68,6 +69,9 @@ class GeneratedRouter {
                 MessagingPage(messagingUser: settings.arguments));
       case '/EditProfile':
         return MaterialPageRoute(builder: (context) => const EditProfilePage());
+      case '/ChangePassword':
+        return MaterialPageRoute(
+            builder: (context) => const ChangePasswordPage());
     }
     return null;
   }

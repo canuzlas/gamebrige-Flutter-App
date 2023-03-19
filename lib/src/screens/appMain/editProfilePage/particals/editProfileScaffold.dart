@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gamebrige/src/screens/appMain/editProfilePage/controller/editProfilePageController.dart';
 import 'package:gamebrige/src/screens/appMain/editProfilePage/state/editProfilePage_state.dart';
+import 'package:gamebrige/src/screens/appMain/myProfilePage/state/myprofile_page_state.dart';
 
 class EditProfileScaffold extends ConsumerStatefulWidget {
   final user;
@@ -38,7 +40,8 @@ class _EditProfileScaffoldState extends ConsumerState<EditProfileScaffold> {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        SystemChannels.textInput.invokeMethod('TextInput.hide');
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back_ios),
@@ -59,116 +62,120 @@ class _EditProfileScaffoldState extends ConsumerState<EditProfileScaffold> {
               child: CircleAvatar(
                 radius: 35,
                 backgroundImage: AssetImage(
-                  widget.user["photo"] == false
+                  widget.user["photo"] == "false"
                       ? "assets/images/defaultpp.jpeg"
-                      : "assets/images/defaultpp.jpeg",
+                      : "assets/images/${widget.user["photo"]}",
                 ),
               ),
             ),
             //pp change button
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                editProfilePageController.showPpP(widget.user, context, ref);
+              },
               child: const Text(
                 "Resmi değiştir",
                 style: TextStyle(color: Colors.black87),
               ),
             ),
-            //forms
-            // name
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    right: 15.0, left: 15.0, top: 10.0, bottom: 10.0),
-                child: Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  child: TextFormField(
-                    validator: editProfilePageController.validateName,
-                    initialValue: widget.user["name"],
-                    maxLength: 25,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.black),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      labelText: 'Adın',
-                    ),
-                    style: TextStyle(color: Colors.black),
-                    onChanged: (txt) {
-                      setState(() {
-                        name = txt;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-            //username
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 15.0,
-                  right: 15.0,
-                ),
-                child: Form(
-                  child: TextFormField(
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: editProfilePageController.validateUsername,
-                    initialValue: widget.user["username"],
-                    maxLength: 18,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.black),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      labelText: 'Kullanıcı adın',
-                    ),
-                    style: TextStyle(color: Colors.black),
-                    onChanged: (txt) {
-                      setState(() {
-                        username = txt;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-            //save
             Flexible(
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                margin: EdgeInsets.only(bottom: 50),
-                child: OutlinedButton(
-                  onPressed: () async {
-                    var data = await editProfilePageController.updateProfile(
-                        name, username, widget.user);
-                    if (data) {
-                      ref.refresh(userFutureProvider);
-                    }
-                  },
-                  style: const ButtonStyle(
-                      backgroundColor:
-                          MaterialStatePropertyAll(Colors.transparent),
-                      padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
-                      elevation: MaterialStatePropertyAll(10.0),
-                      side: MaterialStatePropertyAll(
-                          BorderSide(width: 1.0, color: Colors.white))),
-                  child: const Text(
-                    "Devam Et",
-                    style: TextStyle(color: Colors.white),
+                child: ListView(
+              children: [
+                //name
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        right: 15.0, left: 15.0, top: 10.0, bottom: 10.0),
+                    child: Form(
+                      autovalidateMode: AutovalidateMode.always,
+                      child: TextFormField(
+                        validator: editProfilePageController.validateName,
+                        initialValue: widget.user["name"],
+                        maxLength: 25,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          labelText: 'Adın',
+                        ),
+                        style: TextStyle(color: Colors.black),
+                        onChanged: (txt) {
+                          setState(() {
+                            name = txt;
+                          });
+                        },
+                      ),
+                    ),
                   ),
                 ),
+                //username
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 15.0,
+                      right: 15.0,
+                    ),
+                    child: Form(
+                      child: TextFormField(
+                        autovalidateMode: AutovalidateMode.always,
+                        validator: editProfilePageController.validateUsername,
+                        initialValue: widget.user["username"],
+                        maxLength: 18,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          labelText: 'Kullanıcı adın',
+                        ),
+                        style: TextStyle(color: Colors.black),
+                        onChanged: (txt) {
+                          setState(() {
+                            username = txt;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
+            //save
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(bottom: 40, top: 40),
+              child: OutlinedButton(
+                onPressed: () async {
+                  var data = await editProfilePageController.updateProfile(
+                      name, username, widget.user);
+                  if (data) {
+                    ref.refresh(userFutureProvider);
+                    ref.refresh(myProfilePageFutureProvider);
+                  }
+                },
+                style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.transparent),
+                    padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
+                    side: MaterialStatePropertyAll(
+                        BorderSide(width: 1.0, color: Colors.black87))),
+                child: const Text(
+                  "Güncelle",
+                  style: TextStyle(color: Colors.black87),
+                ),
               ),
-            ),
+            )
           ],
         ));
   }

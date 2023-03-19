@@ -12,6 +12,7 @@ Future<Map<String, dynamic>> getDatasForHomePage() async {
   final user = prefs.getString("user");
 
   final blogs = await homePageController.getFollowedsBlogs(token, user);
+  await homePageController.createMessageListenerForNotification(user);
   return {"token": token, "user": user, "blogs": blogs};
 }
 

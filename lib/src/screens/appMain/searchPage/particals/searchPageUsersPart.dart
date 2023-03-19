@@ -61,9 +61,9 @@ class _SearchPageUsersPartState extends ConsumerState<SearchPageUsersPart> {
                             child: CircleAvatar(
                               radius: 25,
                               backgroundImage: AssetImage(
-                                widget.users[i]["photo"] == false
+                                widget.users[i]["photo"] == "false"
                                     ? "assets/images/defaultpp.jpeg"
-                                    : "assets/images/defaultpp.jpeg",
+                                    : "assets/images/${widget.users[i]["photo"]}",
                               ),
                             ),
                           ),

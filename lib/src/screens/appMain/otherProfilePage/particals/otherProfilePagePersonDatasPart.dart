@@ -73,9 +73,9 @@ class _OtherProfilePagePersonDatasPartState
                     CircleAvatar(
                       radius: 35,
                       backgroundImage: AssetImage(
-                        person["photo"] == false
+                        person["photo"] == "false"
                             ? "assets/images/defaultpp.jpeg"
-                            : "assets/images/defaultpp.jpeg",
+                            : "assets/images/${person["photo"]}",
                       ),
                     ),
                     Column(

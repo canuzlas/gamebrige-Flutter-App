@@ -94,9 +94,9 @@ class _HomePageBlogsState extends ConsumerState<HomePageBlogs> {
                                           backgroundImage: AssetImage(
                                             widget.blogs[i]
                                                         ["blog_author_photo"] ==
-                                                    false
+                                                    "false"
                                                 ? "assets/images/defaultpp.jpeg"
-                                                : "assets/images/defaultpp.jpeg",
+                                                : "assets/images/${widget.blogs[i]["blog_author_photo"]}",
                                           ),
                                         ),
                                       ),

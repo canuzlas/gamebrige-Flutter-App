@@ -19,7 +19,6 @@ class HomePage extends ConsumerWidget {
       loading: () => HomePageLoadingScaffold(),
       data: (data) {
         homePageController.getPermissions();
-        homePageController.createMessageListenerForNotification(data?["user"]);
         return HomePageScaffold(
           token: data?["token"],
           user: data?["user"],

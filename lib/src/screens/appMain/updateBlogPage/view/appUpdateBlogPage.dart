@@ -33,6 +33,7 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
         body: jsonEncode({
           'appId': dotenv.env['APP_ID'],
           'token': token,
+          "JWT_SECRET": dotenv.env['JWT_SECRET'],
           'blog': widget.blog,
           'title': title,
           'text': text
@@ -120,11 +121,6 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(5),
-              child: Text(
-                  "Yapacağın paylaşımın oyunlarla ilgili olduğundan emin ol :)"),
-            ),
             Flexible(
               child: Container(
                   padding: EdgeInsets.zero,
@@ -146,37 +142,32 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
                   child: Column(
                     children: [
                       //title
-                      Container(
-                        margin: EdgeInsets.only(top: 0),
-
-                        //margin: const EdgeInsets.only(top: 120),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Form(
-                              child: TextFormField(
-                                initialValue: widget.blog["blog_title"],
-                                maxLength: 60,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  labelText: 'Blog Başlığı',
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Form(
+                            child: TextFormField(
+                              initialValue: widget.blog["blog_title"],
+                              maxLength: 60,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                style: TextStyle(color: Colors.black),
-                                onChanged: (txt) {
-                                  setState(() {
-                                    title = txt;
-                                  });
-                                },
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                labelText: 'Blog Başlığı',
                               ),
+                              style: TextStyle(color: Colors.black),
+                              onChanged: (txt) {
+                                setState(() {
+                                  title = txt;
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -188,13 +179,13 @@ class _BlogUpdatePageState extends ConsumerState<BlogUpdatePage> {
                           //margin: const EdgeInsets.only(top: 120),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(15.0),
+                              padding: const EdgeInsets.all(10.0),
                               child: Form(
                                 child: SingleChildScrollView(
                                   child: TextFormField(
                                     initialValue: widget.blog["blog_text"],
                                     maxLength: 10000,
-                                    maxLines: _keyboardVisible ? 5 : 15,
+                                    maxLines: _keyboardVisible ? 13 : 13,
                                     decoration: InputDecoration(
                                       labelStyle:
                                           TextStyle(color: Colors.black),
