@@ -61,25 +61,25 @@ class _MyProfilePageDrawerMenuState extends State<MyProfilePageDrawerMenu> {
           ListTile(
             title: const Text('Blog Paylaş'),
             onTap: () {
-              Navigator.pushNamed(context, '/BlogShare');
+              Navigator.popAndPushNamed(context, '/BlogShare');
             },
           ),
           ListTile(
             title: const Text('Profili Düzenle'),
             onTap: () {
-              Navigator.pushNamed(context, '/EditProfile');
+              Navigator.popAndPushNamed(context, '/EditProfile');
             },
           ),
           ListTile(
             title: const Text('Mesajlarım'),
             onTap: () {
-              Navigator.pushNamed(context, '/AllMessages');
+              Navigator.popAndPushNamed(context, '/AllMessages');
             },
           ),
           ListTile(
             title: const Text('Şifreni değiştir'),
             onTap: () {
-              Navigator.pushNamed(context, '/ChangePassword');
+              Navigator.popAndPushNamed(context, '/ChangePassword');
             },
           ),
           ListTile(

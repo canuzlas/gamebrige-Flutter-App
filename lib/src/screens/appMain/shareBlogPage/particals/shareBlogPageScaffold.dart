@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gamebrige/src/screens/appMain/shareBlogPage/particals/shareBlogPageHeader.dart';
@@ -15,11 +18,18 @@ class ShareBlogPageScaffold extends StatefulWidget {
 
 class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
   ShareBlogController shareBlogController = ShareBlogController();
-
+  ConfettiController confettiController = ConfettiController();
   late String title = "";
   late String text = "";
   late bool keyboard = false;
   bool _keyboardVisible = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    confettiController.play();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +39,24 @@ class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
         backgroundColor: const Color.fromRGBO(166, 227, 233, 1),
         body: Column(
           children: [
+            ConfettiWidget(
+              confettiController: confettiController,
+              emissionFrequency: 0.02,
+              numberOfParticles: 10,
+              maxBlastForce: 20,
+              minBlastForce: 5,
+              blastDirectionality: BlastDirectionality.explosive,
+              blastDirection: pi,
+              gravity: 0.2,
+              shouldLoop: false,
+              displayTarget: false,
+              colors: null,
+              minimumSize: const Size(20, 10),
+              maximumSize: const Size(30, 15),
+              particleDrag: 0.05,
+              canvas: MediaQuery.of(context).size,
+              child: null,
+            ),
             //header
             const ShareBlogPageHeader(),
             //form
@@ -127,6 +155,7 @@ class _ShareBlogPageScaffoldState extends State<ShareBlogPageScaffold> {
                           ),
                         ),
                       ),
+
                       //send button
                       Container(
                         alignment: Alignment.topCenter,

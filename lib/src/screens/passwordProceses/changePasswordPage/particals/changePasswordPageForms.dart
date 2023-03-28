@@ -12,120 +12,131 @@ class ChangePasswordPageForms extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        //top text
-        const Padding(
-          padding: EdgeInsets.only(top: 45.0),
-          child: Center(
-            child: Text(
-              "Güvenli bir şifre oluştur.",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.black87),
-            ),
-          ),
-        ),
-        //input for pass
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Form(
-              autovalidateMode: AutovalidateMode.always,
-              child: TextFormField(
-                validator: ref.read(changePasswordProvider.notifier).validate,
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  labelText: 'Şifre',
-                ),
-                style: const TextStyle(color: Colors.black),
-                onChanged: (txt) {
-                  ref.read(changePasswordProvider.notifier).statePass(txt);
-                },
+    return Flexible(
+      child: Column(
+        children: [
+          //top text
+          const Padding(
+            padding: EdgeInsets.only(top: 45.0),
+            child: Center(
+              child: Text(
+                "Güvenli bir şifre oluştur.",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Colors.black87),
               ),
             ),
           ),
-        ),
-        //input for repass
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Form(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: Colors.black),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+          //input for pass
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                autovalidateMode: AutovalidateMode.always,
+                child: TextFormField(
+                  validator: ref.read(changePasswordProvider.notifier).validate,
+                  decoration: const InputDecoration(
+                    labelStyle: TextStyle(color: Colors.black),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    labelText: 'Şifre',
                   ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  labelText: 'Şifre tekrarı',
+                  style: const TextStyle(color: Colors.black),
+                  onChanged: (txt) {
+                    ref.read(changePasswordProvider.notifier).statePass(txt);
+                  },
                 ),
-                style: TextStyle(color: Colors.black),
-                onChanged: (txt) {
-                  ref.read(changePasswordProvider.notifier).stateRepass(txt);
-                },
               ),
             ),
           ),
-        ),
-        // continue button
-        Container(
-          alignment: Alignment.bottomCenter,
-          margin: const EdgeInsets.only(bottom: 50),
-          child: OutlinedButton(
-            onPressed: () {
-              final res = ref.read(changePasswordProvider.notifier).doCheck();
-              res == "empty"
-                  ? Fluttertoast.showToast(
-                      msg: "Şifre boş bırakılamaz",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.TOP,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.transparent,
-                      textColor: Colors.white,
-                      fontSize: 16.0)
-                  : res == "notvalid"
+          //input for repass
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelStyle: TextStyle(color: Colors.black),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    labelText: 'Şifre tekrarı',
+                  ),
+                  style: TextStyle(color: Colors.black),
+                  onChanged: (txt) {
+                    ref.read(changePasswordProvider.notifier).stateRepass(txt);
+                  },
+                ),
+              ),
+            ),
+          ),
+          // continue button
+          Expanded(
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              margin: const EdgeInsets.only(bottom: 50),
+              child: OutlinedButton(
+                onPressed: () async {
+                  final res =
+                      ref.read(changePasswordProvider.notifier).doCheck();
+                  res == "empty"
                       ? Fluttertoast.showToast(
-                          msg: "Şifreniz uygun değil",
+                          msg: "Şifre boş bırakılamaz",
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.TOP,
                           timeInSecForIosWeb: 1,
                           backgroundColor: Colors.transparent,
                           textColor: Colors.white,
                           fontSize: 16.0)
-                      : res
-                          ? print("fnc")
-                          : Fluttertoast.showToast(
-                              msg: "Şifreler uyuşmuyor",
+                      : res == "notvalid"
+                          ? Fluttertoast.showToast(
+                              msg: "Şifreniz uygun değil",
                               toastLength: Toast.LENGTH_LONG,
                               gravity: ToastGravity.TOP,
                               timeInSecForIosWeb: 1,
                               backgroundColor: Colors.transparent,
                               textColor: Colors.white,
-                              fontSize: 16.0);
-            },
-            style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
-                elevation: MaterialStatePropertyAll(10.0),
-                side: MaterialStatePropertyAll(
-                    BorderSide(width: 1.0, color: Colors.white))),
-            child: const Text(
-              "Güncelle",
-              style: TextStyle(color: Colors.white),
+                              fontSize: 16.0)
+                          : res
+                              ? await changePasswordPageController.changePass(
+                                  ref
+                                      .read(changePasswordProvider.notifier)
+                                      .state
+                                      .pass,
+                                  context)
+                              : Fluttertoast.showToast(
+                                  msg: "Şifreler aynı değil",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.transparent,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                },
+                style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.transparent),
+                    padding: MaterialStatePropertyAll(EdgeInsets.all(11.0)),
+                    elevation: MaterialStatePropertyAll(10.0),
+                    side: MaterialStatePropertyAll(
+                        BorderSide(width: 1.0, color: Colors.white))),
+                child: const Text(
+                  "Güncelle",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

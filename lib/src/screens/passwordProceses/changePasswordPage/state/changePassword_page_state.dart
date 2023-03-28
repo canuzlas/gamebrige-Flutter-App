@@ -1,27 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controller/changePasswordPageController.dart';
-
 class PasswordProcess {
   String pass;
   String repass;
-  bool notValitPass = true;
-  PasswordProcess(this.pass, this.repass, this.notValitPass);
+  bool notValidPass = true;
+  PasswordProcess(this.pass, this.repass, this.notValidPass);
 }
 
 class ChangePasswordNotifier extends StateNotifier<PasswordProcess> {
   ChangePasswordNotifier() : super(PasswordProcess("", "", false));
-  ChangePasswordPageController changePasswordPageController =
-      ChangePasswordPageController();
 
   String? validate(String? value) {
     String pattern = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$";
     final regex = RegExp(pattern);
     if (value!.isNotEmpty && !regex.hasMatch(value)) {
-      state.notValitPass = true;
+      state.notValidPass = true;
       return 'Şifreniz minimum 8 maximum 16 karakter olabilir\nEn az bir harf ve bir rakam içermelidir';
     } else {
-      state.notValitPass = false;
+      state.notValidPass = false;
       return null;
     }
   }
@@ -36,7 +32,7 @@ class ChangePasswordNotifier extends StateNotifier<PasswordProcess> {
 
   doCheck() {
     return state.pass.isNotEmpty && state.repass.isNotEmpty
-        ? state.notValitPass
+        ? state.notValidPass
             ? "notvalid"
             : state.pass == state.repass
                 ? true

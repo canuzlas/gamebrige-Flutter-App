@@ -7,7 +7,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ChangePasswordPageController {
+class RememberPasswordPageController {
+  late SharedPreferences prefs;
+
   changePass(pass, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = "${dotenv.env['API_URL']!}api/changepass";
@@ -22,7 +24,7 @@ class ChangePasswordPageController {
           'appId': dotenv.env['APP_ID'],
           'token': prefs.getString("token"),
           "JWT_SECRET": dotenv.env['JWT_SECRET'],
-          'user_id': jsonDecode(prefs.getString("user").toString())["_id"],
+          'mail': prefs.getString("changepassmail"),
           'pass': pass
         },
       ),
@@ -43,10 +45,18 @@ class ChangePasswordPageController {
             fontSize: 16.0);
       } else {
         if (decodedResponse['error'] == false) {
-          await FirebaseAuth.instance.currentUser
-              ?.updatePassword(pass.toString());
+          await FirebaseAuth.instance.sendPasswordResetEmail(
+              email: prefs.getString("changepassmail").toString());
           Fluttertoast.showToast(
               msg: "Şifren değiştirildi !",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          Fluttertoast.showToast(
+              msg: "Email adresinden firebase şifreni değiştirmeyi unutma.!",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.TOP,
               timeInSecForIosWeb: 1,
@@ -65,6 +75,34 @@ class ChangePasswordPageController {
               fontSize: 16.0);
         }
       }
+    }
+  }
+
+  getSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs;
+  }
+
+  void checkOtp(String v) async {
+    await getSharedPreferences();
+    if (v == prefs.getInt("changepassotp").toString()) {
+      Fluttertoast.showToast(
+          msg: "Kod Doğru.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Kod Hatalı.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 }

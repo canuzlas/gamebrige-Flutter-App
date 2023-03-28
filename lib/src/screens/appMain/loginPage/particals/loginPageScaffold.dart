@@ -142,6 +142,20 @@ class _LoginPageScaffoldState extends State<LoginPageScaffold> {
           ),
 
           Container(
+            alignment: Alignment.centerRight,
+            margin: const EdgeInsets.only(bottom: 0, top: 20, right: 20),
+            child: GestureDetector(
+              onTap: () {
+                loginPageController.showMailPopup(context);
+              },
+              child: const Text(
+                "Şifremi unuttum",
+                style: TextStyle(color: Colors.white60, fontSize: 12),
+              ),
+            ),
+          ),
+
+          Container(
             margin: EdgeInsets.only(top: 100),
             child: Center(
               child: OutlinedButton(
